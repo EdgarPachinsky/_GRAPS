@@ -1,0 +1,30 @@
+<div>
+<!--  <p class="text-color-white"><i>Current Graph Has <b>{{graphService.nodes.length}}</b> Nodes</i></p>-->
+<!--  <p class="text-color-white d-flex flex-column mt-10">-->
+<!--    @if(graphService.edges.length){-->
+<!--      <span class="mb-5"><i>Edges</i></span>-->
+<!--    }-->
+<!--    @for (edge of graphService.edges; track edge.id){-->
+<!--      <span>-->
+<!--        From <b>{{edge.from.number}}</b> To <b>{{edge.to.number}}</b>; ID[<b>{{edge.id}}</b>]@if(canvasService.weightTypeControl.value === WeightTypes.WEIGHTED_GRAPH){-->
+<!--        ; Weight[<b>{{edge.weight}}</b>]-->
+<!--      }-->
+<!--      </span>-->
+<!--    }-->
+<!--  </p>-->
+
+  @if(utilsService.showGraphJson){
+    <div class="mt-10">
+      <hr class="mb-20">
+      <button  class="mat-ripple mat-warn" mat-raised-button mat-button [cdkCopyToClipboard]="graphJson | json">
+        <span>COPY JSON</span>
+        <span class="material-icons mr-5">
+        content_copy
+        </span>
+      </button>
+    <pre class="text-color-white" style="font-size: 10px;line-height: 11px">
+{{ graphJson | json }}
+    </pre>
+    </div>
+  }
+</div>

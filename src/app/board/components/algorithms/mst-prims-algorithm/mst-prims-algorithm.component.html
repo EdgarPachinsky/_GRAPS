@@ -1,0 +1,25 @@
+<div class="algo-card d-flex flex-row mt-10">
+  <div class="d-flex flex-row align-items-center">
+    <div class="d-flex flex-row align-items-center">
+      <div class="d-flex text-color-white">MST Prim's Algorithm</div>
+    </div>
+  </div>
+
+  <button
+    [disabled]="graphService.nodes.length < 2 || mstPrimsAlgorithmService.isPlaying"
+    class="mat-ripple mat-warn ml-10" matTooltip="Calculate Minimum Spanning Tree" mat-raised-button mat-button
+    (click)="mstPrimsAlgorithmService.PrimsMST()">
+        <span class="material-icons">
+          play_arrow
+        </span>
+  </button>
+
+  <button
+    [disabled]="graphService.nodes.length < 2"
+    class="mat-ripple mat-warn ml-10" matTooltip="Clear MST" mat-raised-button mat-button
+    (click)="canvasService.drawGraph(false)">
+        <span class="material-icons">
+          restart_alt
+        </span>
+  </button>
+</div>

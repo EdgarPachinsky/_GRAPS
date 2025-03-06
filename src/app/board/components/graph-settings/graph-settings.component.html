@@ -1,0 +1,168 @@
+<div>
+  <span class="mb-5 d-block text-color-white">Graph Settings</span>
+  <p class="d-flex flex-row">
+    <mat-button-toggle-group
+      class="mb-10"
+      [disabled]="graphService.edges.length > 0"
+      [formControl]="canvasService.directionTypeControl" aria-label="Font Style">
+      <mat-button-toggle [value]="DirectionTypes.UNDIRECTED_GRAPH">Undirected Graph</mat-button-toggle>
+      <mat-button-toggle [value]="DirectionTypes.DIRECTED_GRAPH">Directed Graph</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-button-toggle-group
+      class="mb-10 ml-20"
+      [disabled]="graphService.edges.length > 0"
+      [formControl]="canvasService.weightTypeControl" aria-label="Font Style">
+      <mat-button-toggle [value]="WeightTypes.UNWEIGHTED_GRAPH">Unweighted Graph</mat-button-toggle>
+      <mat-button-toggle [value]="WeightTypes.WEIGHTED_GRAPH">Weighted Graph</mat-button-toggle>
+    </mat-button-toggle-group>
+  </p>
+
+  <span class="mb-5 d-block text-color-white">Graph Creating Mode</span>
+  <p>
+    <mat-button-toggle-group class="mb-10" [formControl]="canvasService.modeControl" aria-label="Font Style">
+      <mat-button-toggle value="addNode">Add Node</mat-button-toggle>
+      <mat-button-toggle [disabled]="graphService.nodes.length < 2" value="addEdge">Add Edge</mat-button-toggle>
+    </mat-button-toggle-group>
+    <button class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button (click)="canvasService.clearBoard()">
+      Clear
+      <span class="material-icons mr-5">
+      clear
+      </span>
+    </button>
+  </p>
+
+  @if (canvasService.weightTypeControl.value === WeightTypes.WEIGHTED_GRAPH) {
+    <p class="mt-20">
+      <mat-form-field class="example-form-field">
+        <mat-label>Weight For Future Edges</mat-label>
+        <input matInput type="text" [formControl]="canvasService.weightControl">
+      </mat-form-field>
+    </p>
+  }
+
+  <span class="mb-5 d-block text-color-white">Import Quick Examples</span>
+  <p>
+    <button class="mat-ripple mat-warn" mat-raised-button mat-button
+            (click)="canvasService.importGraph(GRAPH_EXAMPLE_1)">
+      <span>EXAMPLE_1</span>
+      <span class="material-icons mr-5">
+        data_array
+      </span>
+<!--   What Gemini Thinks the algorithm has produced a very good result on this graph.-->
+    </button>
+
+    <button class="mat-ripple mat-warn ml-20" mat-raised-button mat-button
+            (click)="canvasService.importGraph(GRAPH_EXAMPLE_2)">
+      <span>EXAMPLE_2</span>
+      <span class="material-icons mr-5">
+        data_array
+      </span>
+<!--      the algorithm has produced a very good result on this graph -->
+    </button>
+    <button class="mat-ripple mat-warn ml-20" mat-raised-button mat-button
+            (click)="canvasService.importGraph(GRAPH_EXAMPLE_3)">
+      <span>EXAMPLE_3</span>
+      <span class="material-icons mr-5">
+        data_array
+      </span>
+    </button>
+    <button class="mat-ripple mat-warn ml-20" mat-raised-button mat-button
+            (click)="canvasService.importGraph(GRAPH_EXAMPLE_4)">
+      <span>EXAMPLE_4</span>
+      <span class="material-icons mr-5">
+        data_array
+      </span>
+    </button>
+  </p>
+
+  <span class="mb-5 d-block text-color-white">Actions</span>
+  <p>
+    <button class="mat-ripple mat-warn" mat-raised-button mat-button (click)="graphService.toggleGraphJson()">
+      <span>
+        @if (!utilsService.showGraphJson) {
+          Show
+        }
+        @if (utilsService.showGraphJson) {
+          Hide
+        }
+        JSON</span>
+      <span class="material-icons mr-5">
+        data_array
+      </span>
+    </button>
+
+    <button class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button
+            (click)="graphService.toggleGrapsDumpImportInput()">
+      <span>
+        @if (!utilsService.showGrapsDumpImportInput) {
+          Show
+        }
+        @if (utilsService.showGrapsDumpImportInput) {
+          Hide
+        }
+        Graps Dumped JSON Importer
+      </span>
+      <span class="material-icons mr-5">
+      import_export
+      </span>
+    </button>
+  </p>
+
+  <span class="mb-5 d-block text-color-white">Algorithms</span>
+  <div class="d-flex flex-column mt-10">
+    <mat-accordion>
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Graph Visualizations </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p><app-force-directed-eades-spring-embedder></app-force-directed-eades-spring-embedder></p>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Path Finders </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p><app-dijkstra></app-dijkstra></p>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel hideToggle>
+        <mat-expansion-panel-header>
+          <mat-panel-title> Greedy Algorithms </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>
+          <app-mst-kruskals-algorithm></app-mst-kruskals-algorithm>
+          <app-mst-prims-algorithm></app-mst-prims-algorithm>
+        </p>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+
+<!--    <p class="text-color-white mt-20">Graph Visualizations</p>-->
+<!--    <app-force-directed-eades-spring-embedder></app-force-directed-eades-spring-embedder>-->
+
+<!--    <p class="text-color-white mt-20">Path Finders</p>-->
+<!--    <app-dijkstra></app-dijkstra>-->
+
+<!--    <p class="text-color-white mt-20">Greedy Algorithms</p>-->
+<!--    <app-mst-kruskals-algorithm></app-mst-kruskals-algorithm>-->
+<!--    <app-mst-prims-algorithm></app-mst-prims-algorithm>-->
+  </div>
+
+  @if (utilsService.showGrapsDumpImportInput) {
+    <p>
+      <mat-form-field class="example-form-field" style="width: 100%">
+        <mat-label>Paste DUMP Here</mat-label>
+        <textarea matInput rows="5" [formControl]="canvasService.inputDumpControl"></textarea>
+      </mat-form-field>
+
+      <button class="mat-ripple mat-warn" mat-raised-button mat-button (click)="canvasService.importGraph()">
+        <span>Import</span>
+        <span class="material-icons mr-5">
+        rocket_launch
+        </span>
+      </button>
+    </p>
+  }
+
+</div>

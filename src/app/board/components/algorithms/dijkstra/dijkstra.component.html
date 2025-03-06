@@ -1,0 +1,74 @@
+<div class="algo-card">
+  <div class="d-flex flex-row align-items-center">
+    <div class="d-flex flex-row align-items-center">
+      <div class="d-flex text-color-white">Diijkstra Shortest Path</div>
+    </div>
+
+    <button
+      [disabled]="graphService.nodes.length < 2 || dijkstraService.isPlaying"
+      class="mat-ripple mat-warn ml-10" matTooltip="Play Animation" mat-raised-button mat-button
+      (click)="dijkstraService.Diijkstra()">
+        <span class="material-icons">
+          play_arrow
+        </span>
+    </button>
+
+    <button
+      [disabled]="!dijkstraService.isPlaying"
+      class="mat-ripple mat-warn ml-10" matTooltip="Pause" mat-raised-button mat-button
+      (click)="dijkstraService.pauseAnimation()">
+            <span class="material-icons">
+              pause
+            </span>
+    </button>
+
+    <button
+      [disabled]="!dijkstraService.totalDistanceToEndpoint"
+      class="mat-ripple mat-warn ml-10" matTooltip="Reset" mat-raised-button mat-button
+      (click)="dijkstraService.dropGlobals()">
+        <span class="material-icons">
+          restart_alt
+        </span>
+    </button>
+
+
+    <button
+      class="mat-ripple mat-warn ml-10" mat-raised-button mat-button
+      (click)="dijkstraService.toggleInputs()">
+      @if(!dijkstraService.showInputs){Show}
+      @if(dijkstraService.showInputs){Hide}
+      Inptus
+      <span class="material-icons mr-5">
+        @if(!dijkstraService.showInputs){visibility}
+        @if(dijkstraService.showInputs){visibility_off}
+      </span>
+    </button>
+  </div>
+
+  @if(dijkstraService.showInputs){
+    <div class="d-flex flex-row align-items-center mt-20">
+      <mat-form-field class="example-form-field">
+        <mat-label>Start Point</mat-label>
+        <input matInput type="text" [formControl]="dijkstraService.startPointControl">
+      </mat-form-field>
+
+      <mat-form-field class="example-form-field ml-20">
+        <mat-label>End Point</mat-label>
+        <input matInput type="text" [formControl]="dijkstraService.endPointControl">
+      </mat-form-field>
+    </div>
+  }
+
+  @if(dijkstraService.totalDistanceToEndpoint){
+    <p class="text-color-white mt-10">Total Distance From Vertex
+      <b class="text-color-warning">[{{dijkstraService.startPointControl.value}}]</b> To
+      <b class="text-color-warning">[{{dijkstraService.endPointControl.value}}]</b> ->
+      <b class="text-color-warning">{{dijkstraService.totalDistanceToEndpoint}}</b>
+    </p>
+  }
+  @if(dijkstraService.pathDetails){
+    <p class="text-color-white mt-10">Path Details
+      <b class="text-color-warning">{{dijkstraService.pathDetails}}</b>
+    </p>
+  }
+</div>

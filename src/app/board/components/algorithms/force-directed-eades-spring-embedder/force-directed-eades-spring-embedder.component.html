@@ -1,0 +1,82 @@
+<div class="algo-card">
+  <div class="d-flex flex-row align-items-center">
+    <div class="d-flex text-color-white">Force-Directed Eades Spring Embedder
+      <b class="ml-5 text-color-warning"> {{ forceDirectedEadesSpringEmbedderService.forceDirectedSpringEmbedderCompleteStatus }}%</b>
+    </div>
+    <button
+      [disabled]="graphService.nodes.length < 2 || forceDirectedEadesSpringEmbedderService.isPlaying"
+      class="mat-ripple mat-warn ml-10" matTooltip="Play Animation" mat-raised-button mat-button
+      (click)="forceDirectedEadesSpringEmbedderService.ForceDirectedEadesSpringEmbedder()">
+        <span class="material-icons">
+          play_arrow
+        </span>
+    </button>
+    @if (forceDirectedEadesSpringEmbedderService.iteration > 0) {
+      <button
+        class="mat-ripple mat-warn ml-10" matTooltip="Pause" mat-raised-button mat-button
+        (click)="forceDirectedEadesSpringEmbedderService.pauseAnimation()">
+            <span class="material-icons">
+              pause
+            </span>
+      </button>
+
+      <button
+        class="mat-ripple mat-warn ml-10" matTooltip="Stop" mat-raised-button mat-button
+        (click)="forceDirectedEadesSpringEmbedderService.stopAnimation()">
+            <span class="material-icons">
+              stop
+            </span>
+      </button>
+    }
+  </div>
+  @if (forceDirectedEadesSpringEmbedderService.iteration > 0) {
+    <div class="d-flex flex-row align-items-center mt-10">
+      <button
+        [disabled]="forceDirectedEadesSpringEmbedderService.speedMultiplier === 1"
+        class="mat-ripple mat-warn" matTooltip="Reset" mat-raised-button mat-button
+        (click)="forceDirectedEadesSpringEmbedderService.speedUpForceDirected(1)">
+        Reset Speed Multiplier
+      </button>
+
+      <button
+        [disabled]="forceDirectedEadesSpringEmbedderService.speedMultiplier === 2"
+        class="mat-ripple mat-warn ml-10" matTooltip="Speed up x2" mat-raised-button mat-button
+        (click)="forceDirectedEadesSpringEmbedderService.speedUpForceDirected(2)">
+        x2
+      </button>
+
+      <button
+        [disabled]="forceDirectedEadesSpringEmbedderService.speedMultiplier === 10"
+        class="mat-ripple mat-warn ml-10" matTooltip="Speed up x10" mat-raised-button mat-button
+        (click)="forceDirectedEadesSpringEmbedderService.speedUpForceDirected(10)">
+        x10
+      </button>
+
+      <button
+        [disabled]="forceDirectedEadesSpringEmbedderService.speedMultiplier === 20"
+        class="mat-ripple mat-warn ml-10" matTooltip="Speed up x20" mat-raised-button mat-button
+        (click)="forceDirectedEadesSpringEmbedderService.speedUpForceDirected(20)">
+        x20
+      </button>
+
+      <button
+        [disabled]="forceDirectedEadesSpringEmbedderService.speedMultiplier === 30"
+        class="mat-ripple mat-warn ml-10" matTooltip="Speed up x30" mat-raised-button mat-button
+        (click)="forceDirectedEadesSpringEmbedderService.speedUpForceDirected(30)">
+        x30
+      </button>
+    </div>
+
+    <div class="mt-10">
+      <p class="d-flex text-color-white">
+        Maximum Force On Vertex In Iteration
+        <b class="ml-5 text-color-warning">(F Net Max -> {{forceDirectedEadesSpringEmbedderService.maxForceInIteration}})</b>
+      </p>
+      <p class="d-flex text-color-white mt-10">
+        Residual Forces Until Equilibrium
+        <b class="ml-5 text-color-warning">{{forceDirectedEadesSpringEmbedderService.residualForcesUntilEquilibrium}}</b>
+      </p>
+    </div>
+  }
+
+</div>

@@ -1,0 +1,26 @@
+<div class="d-flex flex-row">
+  <div class="board p-5 mr-20" [style.width]="BOARD_WIDTH+'px'" [style.height]="BOARD_HEIGHT+'px'">
+<!--    <canvas-->
+<!--      (mousemove)="handleMouseMove($event)" (mouseleave)="handleMouseLeave()"-->
+<!--      #graphCanvas class="board-canvas" [width]="BOARD_WIDTH" [height]="BOARD_HEIGHT" (click)="canvasService.handleCanvasClick($event)"></canvas>-->
+
+    <canvas
+      #graphCanvas class="board-canvas" [width]="BOARD_WIDTH" [height]="BOARD_HEIGHT" (click)="canvasService.handleCanvasClick($event)"></canvas>
+
+
+<!--      <div  #zoomBox style="position: absolute; border: 1px solid black; overflow: hidden;"-->
+<!--           [style.left.px]="zoomBoxX" [style.top.px]="zoomBoxY"-->
+<!--           [style.width.px]="zoomBoxWidth" [style.height.px]="zoomBoxHeight">-->
+<!--        <canvas #zoomCanvas [width]="zoomCanvasWidth" [height]="zoomCanvasHeight"></canvas>-->
+<!--      </div>-->
+
+  </div>
+
+  <div>
+    <app-graph-settings></app-graph-settings>
+  </div>
+</div>
+
+<div class="mt-20">
+  <app-graph-info></app-graph-info>
+</div>
