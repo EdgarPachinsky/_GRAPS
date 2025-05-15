@@ -1,0 +1,16 @@
+
+.all-path-algorithm-single-path-active{
+  transition: .3s;
+  padding: 1px 5px;
+  background: rgb(239 169 161) !important;
+  color: white !important;
+  cursor: pointer;
+  border-radius: 3px;
+}
+.all-path-algorithm-single-path{
+  transition: .3s;
+
+  &:hover{
+    @extend .all-path-algorithm-single-path-active
+  }
+}

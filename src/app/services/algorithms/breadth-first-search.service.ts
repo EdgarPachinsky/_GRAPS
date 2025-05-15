@@ -229,9 +229,13 @@ export class BreadthFirstSearchService {
 
   BFSv2(){
     this.dumpGlobals();
+
     this.startNode = this.graphService.getVertexFromNumber(
       parseInt(this.startPointControl.value?.toString() || '1')
     );
+
+    console.log(`[this.startNode]`)
+    console.log(this.startNode)
 
     this.BFSv2Rec(
       this.visitedNodesV2,
@@ -244,6 +248,7 @@ export class BreadthFirstSearchService {
 
   dumpGlobals(){
     this.pathDetails = '';
+    this.pathDetailsArray = [];
     this.resultV2 = [];
     this.visitedNodesV2 = [];
 

@@ -118,7 +118,7 @@
 
   <span class="mb-5 d-block text-color-white">Algorithms</span>
   <div class="d-flex flex-column mt-10 mb-10">
-    <mat-accordion>
+    <mat-accordion [multi]="true">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -174,6 +174,7 @@
         <p>
           <app-breadth-first-search></app-breadth-first-search>
           <app-depth-first-search></app-depth-first-search>
+          <app-all-available-paths></app-all-available-paths>
           <app-max-flow></app-max-flow>
         </p>
       </mat-expansion-panel>

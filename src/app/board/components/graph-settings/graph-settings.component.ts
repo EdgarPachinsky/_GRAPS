@@ -29,6 +29,7 @@ import {JsonPipe} from "@angular/common";
 import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
 import {MaxFlowComponent} from "../algorithms/max-flow/max-flow.component";
 import {DepthFirstSearchComponent} from "../algorithms/depth-first-search/depth-first-search.component";
+import {AllAvailablePathsComponent} from "../algorithms/all-available-paths/all-available-paths.component";
 
 @Component({
   selector: 'app-graph-settings',
@@ -55,7 +56,8 @@ import {DepthFirstSearchComponent} from "../algorithms/depth-first-search/depth-
     JsonPipe,
     CdkCopyToClipboard,
     MaxFlowComponent,
-    DepthFirstSearchComponent
+    DepthFirstSearchComponent,
+    AllAvailablePathsComponent
   ],
   templateUrl: './graph-settings.component.html',
   styleUrl: './graph-settings.component.scss'

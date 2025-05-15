@@ -10,6 +10,7 @@ import {GraphSettingsComponent} from "./components/graph-settings/graph-settings
 import {BOARD_HEIGHT, BOARD_WIDTH, WeightTypes} from "../contants/graph.constants";
 import {GraphInfoComponent} from "./components/graph-info/graph-info.component";
 import {NgIf} from "@angular/common";
+import {MatTooltip} from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-board',
@@ -24,7 +25,8 @@ import {NgIf} from "@angular/common";
     MatButton,
     GraphSettingsComponent,
     GraphInfoComponent,
-    NgIf
+    NgIf,
+    MatTooltip
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',

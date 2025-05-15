@@ -11,4 +11,11 @@
   letter-spacing: 2px;
   font-size: 25px;
   font-family: 'Ubuntu';
+  position: relative;
+}
+.version-info{
+  position: absolute;
+  font-size: 10px;
+  top: 5px;
+  right: 8px;
 }

@@ -172,6 +172,7 @@ export class DepthFirstSearchService {
 
   dumpGlobals(){
     this.pathDetails = '';
+    this.pathDetailsArray = [];
     this.result = [];
     this.visitedNodes = [];
 
