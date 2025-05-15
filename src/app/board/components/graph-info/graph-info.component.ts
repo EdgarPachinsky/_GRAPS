@@ -30,11 +30,6 @@ export class GraphInfoComponent {
     }
 
     get graphJson(){
-      return {
-        vertices: this.graphService.nodes,
-        edges: this.graphService.edges,
-        direction: this.canvasService.directionTypeControl.value,
-        weighted: this.canvasService.weightTypeControl.value,
-      }
+      return this.canvasService.graphJson
     }
 }

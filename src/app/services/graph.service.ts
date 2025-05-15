@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Edge, Node} from "../models/graph.model";
 import {UtilsService} from "./utils.service";
-import {E} from "@angular/cdk/keycodes";
 import {DirectionTypes} from "../contants/graph.constants";
 
 @Injectable({
@@ -28,6 +27,26 @@ export class GraphService {
   getAllOtherVertexes(vertex: Node, vertexes: Node[]) {
     return vertexes.filter(V => V !== vertex)
   }
+
+  getAllNeighbourNodes(vertex: Node, NODES: Node[], graphType: DirectionTypes = DirectionTypes.DIRECTED_GRAPH) {
+    let nodes: Node[] = [];
+
+    let allOutgoingEdges = this.getAllOutgoingWeights(vertex, graphType);
+
+    if(allOutgoingEdges.length){
+      allOutgoingEdges.forEach((outgoingEdge) => {
+        if(outgoingEdge.from.number === vertex.number){
+          nodes.push(outgoingEdge.to);
+          return
+        }
+
+        nodes.push(outgoingEdge.from);
+      })
+    }
+
+    return nodes
+  }
+
   getAllNeighbourVertexes(vertex: Node, edges: Edge[]) {
     return edges.filter(E => E.from.number === vertex.number).map((edge) => edge.to)
   }

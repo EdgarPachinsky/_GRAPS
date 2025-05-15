@@ -1,0 +1,59 @@
+<div class="algo-card d-flex flex-column mt-10">
+  <div class="d-flex flex-row">
+    <div class="d-flex flex-row align-items-center">
+      <div class="d-flex flex-row align-items-center">
+        <div class="d-flex text-color-white">Depth First Search</div>
+      </div>
+    </div>
+
+    <button
+      [disabled]="graphService.nodes.length < 2 || depthFirstSearchService.isPlaying"
+      class="mat-ripple mat-warn ml-10" matTooltip="Initiate DFS" mat-raised-button mat-button
+      (click)="depthFirstSearchService.DepthFirstSearch()">
+        <span class="material-icons">
+          play_arrow
+        </span>
+    </button>
+
+    @if(depthFirstSearchService.pathDetails){
+      <button
+        [disabled]="depthFirstSearchService.isPlaying"
+        (click)="depthFirstSearchService.dumpGlobals()"
+        class="mat-ripple mat-warn ml-5" matTooltip="Reset" mat-raised-button mat-button>
+        <span class="material-icons">
+          restart_alt
+        </span>
+      </button>
+    }
+
+    <button
+      class="mat-ripple mat-warn ml-10" mat-raised-button mat-button
+      (click)="depthFirstSearchService.toggleInputs()">
+      @if(!depthFirstSearchService.showInputs){Show}
+      @if(depthFirstSearchService.showInputs){Hide}
+      Inptus
+      <span class="material-icons mr-5">
+        @if(!depthFirstSearchService.showInputs){visibility}
+        @if(depthFirstSearchService.showInputs){visibility_off}
+      </span>
+    </button>
+  </div>
+
+  @if(depthFirstSearchService.showInputs){
+    <div class="d-flex flex-row align-items-center mt-20">
+      <mat-form-field class="example-form-field">
+        <mat-label>Start Point</mat-label>
+        <input matInput type="text" [formControl]="depthFirstSearchService.startPointControl">
+      </mat-form-field>
+    </div>
+  }
+
+
+  @if(depthFirstSearchService.pathDetails){
+    <div class="d-flex flex-column mt-10 p-5" style="max-height: 75px; overflow-y: auto">
+      <div class="">Graph exploration map</div>
+      <div class="mt-5" [innerHTML]="depthFirstSearchService.pathDetails"></div>
+    </div>
+  }
+</div>
+

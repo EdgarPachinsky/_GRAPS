@@ -1,4 +1,4 @@
-<div>
+<div class="graph-settings-container mt-15 p-15">
   <span class="mb-5 d-block text-color-white">Graph Settings</span>
   <p class="d-flex flex-row">
     <mat-button-toggle-group
@@ -24,12 +24,26 @@
       <mat-button-toggle value="addNode">Add Node</mat-button-toggle>
       <mat-button-toggle [disabled]="graphService.nodes.length < 2" value="addEdge">Add Edge</mat-button-toggle>
     </mat-button-toggle-group>
-    <button class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button (click)="canvasService.clearBoard()">
-      Clear
-      <span class="material-icons mr-5">
-      clear
-      </span>
-    </button>
+
+    @if(graphService.nodes.length > 1){
+      <button class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button (click)="canvasService.clearBoard()">
+        Clear
+        <span class="material-icons mr-5">
+        clear
+        </span>
+      </button>
+
+        <button
+          class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button (click)="addToLocalExamples()"
+          matTooltip="This will create a copy of graph and save it in the localstorage. Added {{graphsArray.length}} of 3"
+        >
+          Copy Into Local Storage
+          <span class="material-icons mr-5">
+          save
+        </span>
+        </button>
+      }
+
   </p>
 
   @if (canvasService.weightTypeControl.value === WeightTypes.WEIGHTED_GRAPH) {
@@ -49,7 +63,7 @@
       <span class="material-icons mr-5">
         data_array
       </span>
-<!--   What Gemini Thinks the algorithm has produced a very good result on this graph.-->
+      <!--   What Gemini Thinks the algorithm has produced a very good result on this graph.-->
     </button>
 
     <button class="mat-ripple mat-warn ml-20" mat-raised-button mat-button
@@ -58,7 +72,7 @@
       <span class="material-icons mr-5">
         data_array
       </span>
-<!--      the algorithm has produced a very good result on this graph -->
+      <!--      the algorithm has produced a very good result on this graph -->
     </button>
     <button class="mat-ripple mat-warn ml-20" mat-raised-button mat-button
             (click)="canvasService.importGraph(GRAPH_EXAMPLE_3)">
@@ -76,93 +90,137 @@
     </button>
   </p>
 
-  <span class="mb-5 d-block text-color-white">Actions</span>
-  <p>
-    <button class="mat-ripple mat-warn" mat-raised-button mat-button (click)="graphService.toggleGraphJson()">
-      <span>
-        @if (!utilsService.showGraphJson) {
-          Show
-        }
-        @if (utilsService.showGraphJson) {
-          Hide
-        }
-        JSON</span>
-      <span class="material-icons mr-5">
-        data_array
-      </span>
-    </button>
 
-    <button class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button
-            (click)="graphService.toggleGrapsDumpImportInput()">
-      <span>
-        @if (!utilsService.showGrapsDumpImportInput) {
-          Show
-        }
-        @if (utilsService.showGrapsDumpImportInput) {
-          Hide
-        }
-        Graps Dumped JSON Importer
-      </span>
-      <span class="material-icons mr-5">
-      import_export
-      </span>
-    </button>
-  </p>
+  @if (graphsArray.length) {
+    <span class="mb-5 d-block text-color-white">Local Saved Examples</span>
+    <p class="d-flex flex-row">
+      @for (graph of graphsArray; track graph; let idx = $index) {
+        <span class="d-flex flex-row mr-10">
+            <button class="mat-ripple mat-warn" mat-raised-button mat-button
+                      (click)="canvasService.importGraph(graph)">
+              <span>Draw ex.{{idx+1}}</span>
+              <span class="material-icons mr-5">
+                data_array
+              </span>
+            </button>
+
+            <button
+              (click)="removeGraphFromLocalArray(idx)"
+              class="mat-ripple mat-warn" mat-raised-button mat-button matTooltip="Delete example {{idx+1}}">
+              <span class="material-icons mr-5">
+                delete
+              </span>
+            </button>
+        </span>
+      }
+    </p>
+  }
 
   <span class="mb-5 d-block text-color-white">Algorithms</span>
-  <div class="d-flex flex-column mt-10">
+  <div class="d-flex flex-column mt-10 mb-10">
     <mat-accordion>
-      <mat-expansion-panel hideToggle>
+      <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title> Graph Visualizations </mat-panel-title>
+          <mat-panel-title>
+            Graph Visualizations
+            <span class="material-icons ml-10 text-color-warning">
+              diamond
+            </span>
+          </mat-panel-title>
         </mat-expansion-panel-header>
-        <p><app-force-directed-eades-spring-embedder></app-force-directed-eades-spring-embedder></p>
+        <p>
+          <app-force-directed-eades-spring-embedder></app-force-directed-eades-spring-embedder>
+        </p>
       </mat-expansion-panel>
 
-      <mat-expansion-panel hideToggle>
+      <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title> Path Finders </mat-panel-title>
+          <mat-panel-title>
+            Path Finders
+            <span class="material-icons ml-10 text-color-warning">
+              route
+            </span>
+          </mat-panel-title>
         </mat-expansion-panel-header>
-        <p><app-dijkstra></app-dijkstra></p>
+        <p>
+          <app-dijkstra></app-dijkstra>
+        </p>
       </mat-expansion-panel>
 
-      <mat-expansion-panel hideToggle>
+      <mat-expansion-panel>
         <mat-expansion-panel-header>
-          <mat-panel-title> Greedy Algorithms </mat-panel-title>
+          <mat-panel-title>
+            Greedy Algorithms
+            <span class="material-icons ml-10 text-color-warning">
+              auto_graph
+            </span>
+          </mat-panel-title>
         </mat-expansion-panel-header>
         <p>
           <app-mst-kruskals-algorithm></app-mst-kruskals-algorithm>
           <app-mst-prims-algorithm></app-mst-prims-algorithm>
         </p>
       </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Graph Traversal
+            <span class="material-icons ml-10 text-color-warning">
+              mediation
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p>
+          <app-breadth-first-search></app-breadth-first-search>
+          <app-depth-first-search></app-depth-first-search>
+          <app-max-flow></app-max-flow>
+        </p>
+      </mat-expansion-panel>
     </mat-accordion>
-
-
-<!--    <p class="text-color-white mt-20">Graph Visualizations</p>-->
-<!--    <app-force-directed-eades-spring-embedder></app-force-directed-eades-spring-embedder>-->
-
-<!--    <p class="text-color-white mt-20">Path Finders</p>-->
-<!--    <app-dijkstra></app-dijkstra>-->
-
-<!--    <p class="text-color-white mt-20">Greedy Algorithms</p>-->
-<!--    <app-mst-kruskals-algorithm></app-mst-kruskals-algorithm>-->
-<!--    <app-mst-prims-algorithm></app-mst-prims-algorithm>-->
   </div>
 
-  @if (utilsService.showGrapsDumpImportInput) {
-    <p>
-      <mat-form-field class="example-form-field" style="width: 100%">
-        <mat-label>Paste DUMP Here</mat-label>
-        <textarea matInput rows="5" [formControl]="canvasService.inputDumpControl"></textarea>
-      </mat-form-field>
+  <span class="mb-5 d-block text-color-white">Tools</span>
+  <div class="d-flex flex-column mt-10">
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Import
+            <span class="material-icons ml-10 text-color-warning">
+              rocket_launch
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <p class="mt-10">
+          <mat-form-field class="example-form-field" style="width: 100%">
+            <mat-label>Paste DUMP Here</mat-label>
+            <textarea matInput rows="5" [formControl]="canvasService.inputDumpControl"></textarea>
+          </mat-form-field>
 
-      <button class="mat-ripple mat-warn" mat-raised-button mat-button (click)="canvasService.importGraph()">
-        <span>Import</span>
-        <span class="material-icons mr-5">
-        rocket_launch
-        </span>
-      </button>
-    </p>
-  }
-
+          <button class="mat-ripple mat-warn" mat-raised-button mat-button (click)="canvasService.importGraph()">
+            <span>Import</span>
+          </button>
+        </p>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Copy/Show Graph JSON
+            <span class="material-icons ml-10 text-color-warning">
+              content_copy
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div>
+          <button  class="mat-ripple mat-warn" mat-raised-button mat-button [cdkCopyToClipboard]="canvasService.graphJson | json">
+            <span>COPY JSON</span>
+          </button>
+        <pre class="text-color-white" style="font-size: 10px;line-height: 11px">
+{{ canvasService.graphJson | json }}
+        </pre>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
 </div>

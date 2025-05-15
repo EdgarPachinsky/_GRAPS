@@ -1,0 +1,16 @@
+<div class="algo-card d-flex flex-row mt-10">
+  <div class="d-flex flex-row align-items-center">
+    <div class="d-flex flex-row align-items-center">
+      <div class="d-flex text-color-white">Max Flow</div>
+    </div>
+  </div>
+
+  <button
+    [disabled]="graphService.nodes.length < 2 || maxFlowService.isPlaying"
+    class="mat-ripple mat-warn ml-10" matTooltip="Initiate MAX FLOW calculation" mat-raised-button mat-button
+    (click)="maxFlowService.maxFlowStart()">
+        <span class="material-icons">
+          play_arrow
+        </span>
+  </button>
+</div>

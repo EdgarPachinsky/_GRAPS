@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, OnDestroy, OnInit, signal} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {CanvasService} from "../../../services/canvas.service";
@@ -23,6 +23,12 @@ import {
   MatExpansionPanelDescription,
   MatExpansionPanelTitle
 } from "@angular/material/expansion";
+import {BreadthFirstSearchComponent} from "../algorithms/breadth-first-search/breadth-first-search.component";
+import {Subscription} from "rxjs";
+import {JsonPipe} from "@angular/common";
+import {CdkCopyToClipboard} from "@angular/cdk/clipboard";
+import {MaxFlowComponent} from "../algorithms/max-flow/max-flow.component";
+import {DepthFirstSearchComponent} from "../algorithms/depth-first-search/depth-first-search.component";
 
 @Component({
   selector: 'app-graph-settings',
@@ -44,12 +50,18 @@ import {
     MatExpansionPanel,
     MatExpansionPanelTitle,
     MatExpansionPanelDescription,
-    MatExpansionModule
+    MatExpansionModule,
+    BreadthFirstSearchComponent,
+    JsonPipe,
+    CdkCopyToClipboard,
+    MaxFlowComponent,
+    DepthFirstSearchComponent
   ],
   templateUrl: './graph-settings.component.html',
   styleUrl: './graph-settings.component.scss'
 })
-export class GraphSettingsComponent {
+export class GraphSettingsComponent implements OnInit, OnDestroy{
+  private $subscriptions = new Subscription();
 
   protected readonly GRAPH_EXAMPLE_1: GrapsDUMP = GRAPH_EXAMPLE_1;
   protected readonly GRAPH_EXAMPLE_2: GrapsDUMP = GRAPH_EXAMPLE_2;
@@ -59,7 +71,9 @@ export class GraphSettingsComponent {
   protected readonly DirectionTypes = DirectionTypes;
   protected readonly WeightTypes = WeightTypes;
 
-  readonly panelOpenState = signal(false);
+  public localStorageExamples: GrapsDUMP[] = []
+
+  graphsArray: any = [];
 
   constructor(
     public graphService: GraphService,
@@ -68,4 +82,37 @@ export class GraphSettingsComponent {
   ) {
   }
 
+  ngOnInit() {
+    this.updateLocalGraphsArray();
+
+    this.$subscriptions.add(
+      this.canvasService.updateLocalGraphsArray.subscribe((res) => {
+        if(res){
+          this.updateLocalGraphsArray();
+        }
+      })
+    )
+  }
+
+  updateLocalGraphsArray(){
+    this.graphsArray = this.utilsService.getGraphs();
+  }
+
+  removeGraphFromLocalArray(index: number){
+    this.utilsService.deleteGraphByIndex(index);
+    this.updateLocalGraphsArray();
+  }
+
+  addToLocalExamples(){
+    if(this.graphsArray.length > 2){
+      this.utilsService.showSnackBar('Maximum allowed count of local example excited, please delete at least one and then try to add new graph.', 3000);
+      return;
+    }
+    this.utilsService.addGraph(this.canvasService.graphJson);
+    this.updateLocalGraphsArray();
+  }
+
+  ngOnDestroy() {
+    this.$subscriptions.unsubscribe()
+  }
 }

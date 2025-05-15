@@ -1,4 +1,4 @@
-import {ElementRef, Injectable, OnInit} from '@angular/core';
+import {ElementRef, EventEmitter, Injectable, OnInit} from '@angular/core';
 import {GraphService} from "./graph.service";
 import {FormControl, Validators} from "@angular/forms";
 import {Subscription} from "rxjs";
@@ -20,8 +20,7 @@ import {
   providedIn: 'root'
 })
 export class CanvasService {
-
-  private $subscriptions = new Subscription();
+  public importCanBeSaved: boolean = false;
 
   activeNodeColor: string = '#324b4b';
   passiveNodeColor: string = '#101414';
@@ -48,12 +47,21 @@ export class CanvasService {
   // Input DUMP Control
   inputDumpControl = new FormControl('', [Validators.required]);
 
+  // Local graph example information controls
+  localGraphExampleNameControl = new FormControl('', [Validators.required, Validators.maxLength(10)]);
+
+  localGraphExampleDescControl = new FormControl('', [Validators.required, Validators.maxLength(50)]);
+
+  updateLocalGraphsArray: EventEmitter<boolean> = new EventEmitter();
+
   selectedNode: Node | null = null;
 
   constructor(
     public graphService: GraphService,
     public utilsService: UtilsService,
   ) {
+    this.localGraphExampleNameControl.disable()
+    this.localGraphExampleDescControl.disable()
   }
 
   handleCanvasClick(event: MouseEvent) {
@@ -354,6 +362,7 @@ export class CanvasService {
   }
 
   importGraph(forceImport: GrapsDUMP | null = null) {
+    this.importCanBeSaved = false;
     let graphDump!: GrapsDUMP;
     if (!forceImport && !this.inputDumpControl.value)
       return;
@@ -377,8 +386,26 @@ export class CanvasService {
       this.graphService.edges = [...graphDump.edges] || [];
 
       this.drawGraph(false);
+      this.importCanBeSaved = true;
+
+      this.localGraphExampleNameControl.enable()
+      this.localGraphExampleDescControl.enable()
+
     } catch (err) {
-      this.utilsService.showSnackBar('Damaged JSON, please check again!')
+      this.utilsService.showSnackBar('Damaged JSON, please check again!');
+      this.importCanBeSaved = false;
+    }
+  }
+
+  saveExampleInLocalStorage(){
+    try{
+      this.utilsService.addGraph(this.graphJson);
+
+      this.updateLocalGraphsArray.next(true)
+
+      this.importCanBeSaved = false;
+    }catch (error){
+      this.importCanBeSaved = false;
     }
   }
 
@@ -396,5 +423,14 @@ export class CanvasService {
   clearCanvas(){
     this.ctx.clearRect(0, 0, this.canvasRef.nativeElement.width, this.canvasRef.nativeElement.height);
     this.ctx.save(); // Save current context state
+  }
+
+  public get graphJson(){
+    return  {
+      vertices: this.graphService.nodes,
+      edges: this.graphService.edges,
+      direction: this.directionTypeControl.value,
+      weighted: this.weightTypeControl.value,
+    }
   }
 }

@@ -1,6 +1,12 @@
 .board-container{
 
 }
+.toolbar-container{
+  background: #222222;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
 .app-title{
   letter-spacing: 2px;
   font-size: 25px;
