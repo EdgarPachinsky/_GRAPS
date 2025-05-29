@@ -11,6 +11,15 @@ import {BOARD_HEIGHT, BOARD_WIDTH, WeightTypes} from "../contants/graph.constant
 import {GraphInfoComponent} from "./components/graph-info/graph-info.component";
 import {NgIf} from "@angular/common";
 import {MatTooltip} from "@angular/material/tooltip";
+import {
+  trigger,
+  transition,
+  style,
+  animate,
+  query,
+  group
+} from '@angular/animations';
+
 
 @Component({
   selector: 'app-board',
@@ -30,9 +39,58 @@ import {MatTooltip} from "@angular/material/tooltip";
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',
+  animations: [
+    trigger('slideAnimation', [
+      transition(':increment', [
+        style({ position: 'relative' }),
+        query(':enter, :leave', [
+          style({
+            position: 'absolute',
+            width: '100%',
+            top: 0,
+            left: 0,
+          })
+        ], { optional: true }),
+        group([
+          query(':leave', [
+            animate('300ms ease', style({ left: '-100%', opacity: 0 }))
+          ], { optional: true }),
+          query(':enter', [
+            style({ left: '100%', opacity: 0 }),
+            animate('300ms ease', style({ left: '0%', opacity: 1 }))
+          ], { optional: true })
+        ])
+      ]),
+      transition(':decrement', [
+        style({ position: 'relative' }),
+        query(':enter, :leave', [
+          style({
+            position: 'absolute',
+            width: '100%',
+            top: 0,
+            left: 0,
+          })
+        ], { optional: true }),
+        group([
+          query(':leave', [
+            animate('300ms ease', style({ left: '100%', opacity: 0 }))
+          ], { optional: true }),
+          query(':enter', [
+            style({ left: '-100%', opacity: 0 }),
+            animate('300ms ease', style({ left: '0%', opacity: 1 }))
+          ], { optional: true })
+        ])
+      ])
+    ])
+  ]
 })
 export class BoardComponent implements AfterViewInit, OnDestroy{
   private $subscriptions = new Subscription();
+
+  protected readonly WeightTypes = WeightTypes;
+  protected readonly BOARD_WIDTH = BOARD_WIDTH;
+  protected readonly BOARD_HEIGHT = BOARD_HEIGHT;
+  protected readonly window = window;
 
   // scale: number = 1;
   @ViewChild('graphCanvas', { static: false }) canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -73,6 +131,8 @@ export class BoardComponent implements AfterViewInit, OnDestroy{
   // }
 
   ngAfterViewInit() {
+    this.canvasService.onNewInstance(true);
+
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
     // this.zoomCtx = this.zoomCanvasRef.nativeElement.getContext('2d')!;
 
@@ -89,6 +149,7 @@ export class BoardComponent implements AfterViewInit, OnDestroy{
         this.canvasService.selectedNode = null; // Deselect any node when changing modes
       })
     )
+
   }
 
   // handleMouseMove(event: MouseEvent) {
@@ -133,12 +194,25 @@ export class BoardComponent implements AfterViewInit, OnDestroy{
   //   this.showZoomBox = false;
   // }
 
+  get currentIndex() {
+    return this.canvasService.graphInstanceIndex;
+  }
 
   ngOnDestroy() {
     this.$subscriptions.unsubscribe();
   }
 
-  protected readonly WeightTypes = WeightTypes;
-  protected readonly BOARD_WIDTH = BOARD_WIDTH;
-  protected readonly BOARD_HEIGHT = BOARD_HEIGHT;
+  exportCanvasAsPNG(): void {
+    if (!this.canvasRef) return;
+
+    const canvas = this.canvasRef.nativeElement;
+    const dataURL = canvas.toDataURL('image/png');
+
+    // Create a link and simulate download
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'graph-canvas.png';
+    a.click();
+  }
+
 }

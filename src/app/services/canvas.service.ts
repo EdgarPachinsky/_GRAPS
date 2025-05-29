@@ -22,6 +22,8 @@ import {
 export class CanvasService {
   public importCanBeSaved: boolean = false;
 
+  public graphInstanceIndex:number = 0
+
   activeNodeColor: string = '#324b4b';
   passiveNodeColor: string = '#101414';
 
@@ -30,6 +32,8 @@ export class CanvasService {
   ctx!: CanvasRenderingContext2D;
 
   modeControl = new FormControl(GraphCreateMode.ADD_NODE);
+  regularEdgeColorControl = new FormControl('#324b4b');
+  highlightedEdgeColorControl = new FormControl('#ffb4ab');
 
   // Direction settings
   // 1. Undirected Graph,
@@ -46,6 +50,15 @@ export class CanvasService {
 
   // Input DUMP Control
   inputDumpControl = new FormControl('', [Validators.required]);
+
+
+  randomGraphNodeDenseControl = new FormControl(20);
+  randomGraphWeightStartControl = new FormControl(1);
+  randomGraphWeightEndControl = new FormControl(50);
+
+  randomGraphMinDirectionControl = new FormControl(2);
+  randomGraphMaxDirectionControl = new FormControl(8);
+
 
   // Local graph example information controls
   localGraphExampleNameControl = new FormControl('', [Validators.required, Validators.maxLength(10)]);
@@ -64,20 +77,70 @@ export class CanvasService {
     this.localGraphExampleDescControl.disable()
   }
 
-  handleCanvasClick(event: MouseEvent) {
-    const x = event.offsetX;
-    const y = event.offsetY;
+  handleCanvasClick(event: MouseEvent | undefined = undefined, pointsFromRandomGenerator: { x: number, y:number, number: number } | undefined = undefined) {
+    if(!event && !pointsFromRandomGenerator){
+      return;
+    }
+
+    const x = (pointsFromRandomGenerator?.x || event?.offsetX)!;
+    const y = (pointsFromRandomGenerator?.y || event?.offsetY)!;
 
     if (this.modeControl?.value === GraphCreateMode.ADD_NODE) {
 
       const onNode = this.findNode(x, y, (NODE_RADIUS * 2));
+      if(onNode && event?.shiftKey){
+        const nodeToDelete = onNode;
+
+        // // Remove from main node array
+        this.graphService.nodes = this.graphService.nodes.filter(
+          (node) => node.number !== nodeToDelete.number
+        );
+
+        // // Remove from instance node array
+        this.graphService.graphInstances[this.graphInstanceIndex].vertices =
+          this.graphService.graphInstances[this.graphInstanceIndex].vertices.filter(
+            (node) => node.number !== nodeToDelete.number
+          );
+        //
+        // // Remove associated edges
+        this.graphService.edges = this.graphService.edges.filter(
+          (edge) =>
+            edge.from.number !== nodeToDelete.number &&
+            edge.to.number !== nodeToDelete.number
+        );
+        //
+        this.graphService.graphInstances[this.graphInstanceIndex].edges =
+          this.graphService.graphInstances[this.graphInstanceIndex].edges.filter(
+            (edge) =>
+              edge.from.number !== nodeToDelete.number &&
+              edge.to.number !== nodeToDelete.number
+          );
+
+
+
+        this.drawGraph(false);
+        this.utilsService.showSnackBar(`Node[${nodeToDelete.number}] deleted`);
+        return;
+      }
+
       if (!onNode) {
-        const number = this.graphService.nodes.length + 1;
+        const maxNumber = this.graphService.nodes.length ? Math.max(...this.graphService.nodes.map(n => n.number)) : 0;
+
+        const number =
+          pointsFromRandomGenerator?.number ||
+          maxNumber + 1;
+
         this.graphService.nodes.push({x, y, number});
+
+        this.graphService.graphInstances[
+          this.graphInstanceIndex
+        ].vertices.push({x, y, number});
+
         this.drawGraph(false);
       }
 
-    } else if (this.modeControl?.value === GraphCreateMode.ADD_EDGE) {
+    }
+    else if (this.modeControl?.value === GraphCreateMode.ADD_EDGE) {
       const clickedNode: Node | null = this.findNode(x, y);
 
       if (clickedNode) {
@@ -95,7 +158,8 @@ export class CanvasService {
               this.graphService.edges.find(el => el.id === nodeId) ||
               this.graphService.edges.find(el => el.id === reverseNodeId)
             ) {
-              this.utilsService.showSnackBar(`EDGE ALREADY EXISTS`);
+              if(!pointsFromRandomGenerator)
+                this.utilsService.showSnackBar(`EDGE ALREADY EXISTS`);
               this.selectedNode.isClicked = false;
               clickedNode.isClicked = false;
               this.selectedNode = null;
@@ -108,7 +172,8 @@ export class CanvasService {
             if (
               this.graphService.edges.find(el => el.id === nodeId)
             ) {
-              this.utilsService.showSnackBar(`EDGE ALREADY EXISTS`);
+              if(!pointsFromRandomGenerator)
+                this.utilsService.showSnackBar(`EDGE ALREADY EXISTS`);
               this.selectedNode.isClicked = false;
               clickedNode.isClicked = false;
               this.selectedNode = null;
@@ -125,14 +190,19 @@ export class CanvasService {
           // EDGE CONTROL FLOW END
 
 
-          this.graphService.edges.push({
+          let newEdge = {
             from: this.selectedNode, to: clickedNode,
             ...(this.weightTypeControl.value === WeightTypes.WEIGHTED_GRAPH &&
               (!this.weightControl.invalid && this.weightControl.value !== null)) && {
               weight: this.weightControl.value
             },
             id: nodeId, isReverseEdge
-          });
+          }
+          this.graphService.edges.push(newEdge);
+
+          this.graphService.graphInstances[
+            this.graphInstanceIndex
+            ].edges.push(newEdge);
 
           this.selectedNode.isClicked = false;
           clickedNode.isClicked = false;
@@ -140,10 +210,67 @@ export class CanvasService {
           this.drawGraph(false);
         } else {
           this.selectedNode = clickedNode;
-          this.utilsService.showSnackBar(`Node[${this.selectedNode.number}] selected`)
+          if(!pointsFromRandomGenerator)
+            this.utilsService.showSnackBar(`Node[${this.selectedNode.number}] selected`)
+        }
+      }else{
+        if (event?.shiftKey) {
+          const edgeHitbox = 6; // pixels around the line
+          const clickedEdge = this.graphService.edges.find(edge => {
+            return this.isPointNearLine(
+              {x, y},
+              {x: edge.from.x, y: edge.from.y},
+              {x: edge.to.x, y: edge.to.y},
+              edgeHitbox
+            );
+          });
+
+          console.log([clickedEdge])
+          console.log(clickedEdge)
+          if (clickedEdge) {
+            this.graphService.edges = this.graphService.edges.filter(edge => edge !== clickedEdge);
+            this.graphService.graphInstances[this.graphInstanceIndex].edges =
+              this.graphService.graphInstances[this.graphInstanceIndex].edges.filter(edge => edge !== clickedEdge);
+            this.drawGraph(false);
+            this.utilsService.showSnackBar(`Edge[${clickedEdge.from.number} - ${clickedEdge.to.number}] deleted`);
+            return;
+          }
         }
       }
     }
+  }
+
+  isPointNearLine(point: { x: number, y: number }, lineStart: { x: number, y: number }, lineEnd: { x: number, y: number }, tolerance: number): boolean {
+    const { x: px, y: py } = point;
+    const { x: x1, y: y1 } = lineStart;
+    const { x: x2, y: y2 } = lineEnd;
+
+    const A = px - x1;
+    const B = py - y1;
+    const C = x2 - x1;
+    const D = y2 - y1;
+
+    const dot = A * C + B * D;
+    const lenSq = C * C + D * D;
+    let param = -1;
+    if (lenSq !== 0) param = dot / lenSq;
+
+    let closestX, closestY;
+
+    if (param < 0) {
+      closestX = x1;
+      closestY = y1;
+    } else if (param > 1) {
+      closestX = x2;
+      closestY = y2;
+    } else {
+      closestX = x1 + param * C;
+      closestY = y1 + param * D;
+    }
+
+    const dx = px - closestX;
+    const dy = py - closestY;
+    return Math.sqrt(dx * dx + dy * dy) < tolerance;
   }
 
   setContext(ctx: CanvasRenderingContext2D) {
@@ -211,11 +338,11 @@ export class CanvasService {
         maxY = Math.max(maxY, vertex.y);
       }
 
-      // 2. Calculate Ranges (same as before)
+      // 2. Calculate Ranges
       const rangeX = maxX - minX;
       const rangeY = maxY - minY;
 
-      // 3. Calculate Scale Factors (adjust canvas size for threshold)
+      // 3. Calculate Scale Factors
       const availableWidth = parseInt(BOARD_WIDTH) - 2 * BORDER_THRESHOLD;
       const availableHeight = parseInt(BOARD_HEIGHT) - 2 * BORDER_THRESHOLD;
 
@@ -228,13 +355,111 @@ export class CanvasService {
 
     this.ctx.scale(scale, scale); // Apply scaling
     // Draw edges
-    this.drawEdges(edgesToHighLight);
+    this.drawEdges(edgesToHighLight)
+
+    // TODO: fix issues with progress drawing
+    //this.drawEdgesAnimated(edgesToHighLight);
 
     // Draw nodes and numbers
     this.drawNodes();
 
     this.ctx.restore(); // Restore context state after scaling
   }
+
+  drawEdgesAnimated(edgesToHighlight: any[] = []) {
+    const duration = 500; // animation duration in ms
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      this.clearCanvas(); // clear before redraw
+      this.drawNodes();   // optionally redraw nodes if they are separate
+      this.drawEdgesWithProgress(progress, edgesToHighlight);
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }
+
+  drawEdgesWithProgress(progress: number, edgesToHighlight: any[] = []) {
+    for (const edge of this.graphService.edges) {
+      const from = edge.from;
+      const to = edge.to;
+      const weight = edge.weight;
+      const isReverseEdge = !!edge.isReverseEdge;
+
+      const dx = to.x - from.x;
+      const dy = to.y - from.y;
+      const angle = Math.atan2(dy, dx);
+
+      const fromX = from.x + NODE_RADIUS * Math.cos(angle);
+      const fromY = from.y + NODE_RADIUS * Math.sin(angle);
+      const toX = to.x - NODE_RADIUS * Math.cos(angle);
+      const toY = to.y - NODE_RADIUS * Math.sin(angle);
+
+      let curveX = 0, curveY = 0;
+
+      // Collision curve logic
+      for (const node of this.graphService.nodes) {
+        if (node !== from && node !== to) {
+          const intersection = this.getIntersectionPoint(fromX, fromY, toX, toY, node.x, node.y, NODE_RADIUS);
+          if (intersection) {
+            const dx = intersection.x - node.x;
+            const dy = intersection.y - node.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const maxCurveOffset = CURVE_OFFSET * (1 + (NODE_RADIUS - distance) / NODE_RADIUS);
+            curveX = maxCurveOffset * Math.cos(angle + Math.PI / 2);
+            curveY = maxCurveOffset * Math.sin(angle + Math.PI / 2);
+            break;
+          }
+        }
+      }
+
+      // Calculate quadratic control point
+      const ctrlX = (fromX + toX) / 2 + curveX;
+      const ctrlY = (fromY + toY) / 2 + curveY;
+
+      // Get animated point on quadratic curve using De Casteljau's algorithm
+      const currentPoint = this.getPointOnQuadraticBezier(fromX, fromY, ctrlX, ctrlY, toX, toY, progress);
+
+      this.ctx.beginPath();
+      this.ctx.moveTo(fromX, fromY);
+      this.ctx.quadraticCurveTo(ctrlX, ctrlY, currentPoint.x, currentPoint.y);
+
+      const isHighlighted = edgesToHighlight.some(e => e.from === from && e.to === to);
+      this.ctx.strokeStyle = isHighlighted ? 'red' : '#324b4b';
+      this.ctx.stroke();
+
+      // Draw weight if full animation done
+      if (progress >= 1 && this.weightTypeControl.value === WeightTypes.WEIGHTED_GRAPH && weight !== undefined) {
+        let midX = (fromX + toX) / 2;
+        let midY = (fromY + toY) / 2;
+        if (isReverseEdge || (curveX !== 0 && curveY !== 0)) {
+          const t = 0.5;
+          midX = (1 - t) * (1 - t) * fromX + 2 * (1 - t) * t * ctrlX + t * t * toX;
+          midY = (1 - t) * (1 - t) * fromY + 2 * (1 - t) * t * ctrlY + t * t * toY;
+        }
+
+        this.ctx.font = `${NODE_TO_NODE_EDGE_INSIDE_TEXT_SIZE}px Arial`;
+        this.ctx.fillStyle = isHighlighted ? 'red' : 'white';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        this.ctx.fillText(weight.toString(), midX, midY);
+      }
+    }
+  }
+
+  getPointOnQuadraticBezier(x0: number, y0: number, cx: number, cy: number, x1: number, y1: number, t: number) {
+    const x = (1 - t) * (1 - t) * x0 + 2 * (1 - t) * t * cx + t * t * x1;
+    const y = (1 - t) * (1 - t) * y0 + 2 * (1 - t) * t * cy + t * t * y1;
+    return { x, y };
+  }
+
 
   drawEdges(edgesToHighlight: any[] = []) { // Optional parameter for edges to highlight
     for (const edge of this.graphService.edges) {
@@ -291,7 +516,10 @@ export class CanvasService {
         highlightedEdge.from === from && highlightedEdge.to === to
       );
 
-      this.ctx.strokeStyle = isHighlighted ? 'red' : '#324b4b'; // Highlight color
+      this.ctx.strokeStyle = isHighlighted ?
+        this.highlightedEdgeColorControl.value || 'red' :
+        this.regularEdgeColorControl.value || '#324b4b';
+
       this.ctx.stroke();
 
       if (this.directionTypeControl.value === DirectionTypes.DIRECTED_GRAPH) {
@@ -357,7 +585,7 @@ export class CanvasService {
       this.ctx.strokeStyle = 'white';
       this.ctx.stroke();
       // Draw number inside the circle
-      this.ctx.strokeText((i + 1).toString(), node.x, node.y); // Draw node number (i + 1 for 1-based index)
+      this.ctx.strokeText((node.number).toString(), node.x, node.y); // Draw node number (i + 1 for 1-based index)
     }
   }
 
@@ -384,6 +612,15 @@ export class CanvasService {
 
       this.graphService.nodes = [...graphDump.vertices] || [];
       this.graphService.edges = [...graphDump.edges] || [];
+
+      this.graphService.graphInstances[
+        this.graphInstanceIndex
+      ].edges = [...graphDump.edges] || []
+
+      this.graphService.graphInstances[
+        this.graphInstanceIndex
+        ].vertices =   [...graphDump.vertices] || []
+
 
       this.drawGraph(false);
       this.importCanBeSaved = true;
@@ -433,4 +670,42 @@ export class CanvasService {
       weighted: this.weightTypeControl.value,
     }
   }
+
+  onNewInstance(firstInit: boolean = false){
+
+    let newGraph: GrapsDUMP = {
+      edges: [],
+      vertices: [],
+      weighted: WeightTypes.UNWEIGHTED_GRAPH,
+      direction: DirectionTypes.UNDIRECTED_GRAPH
+    }
+
+    this.graphService.graphInstances.push(newGraph);
+
+    if(!firstInit)
+      this.onInstanceIndexChange('right');
+  }
+
+  onInstanceIndexChange(direction: 'right' | 'left'){
+    console.log(`[this.graphService.graphInstances]`)
+    console.log(this.graphService.graphInstances)
+
+    if(direction === 'right' && this.graphInstanceIndex === this.graphService.graphInstances.length-1){
+      return
+    }
+
+    if(direction === 'left' && this.graphInstanceIndex === 0){
+      return
+    }
+
+    this.graphInstanceIndex = direction === 'right' ? this.graphInstanceIndex + 1 : this.graphInstanceIndex - 1;
+
+    let newInstance = this.graphService.graphInstances[this.graphInstanceIndex];
+
+    this.graphService.activateInstance(newInstance);
+
+    this.drawGraph(false);
+  }
+
+
 }

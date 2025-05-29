@@ -9,6 +9,7 @@ import {GraphService} from "../../../../services/graph.service";
 import {BreadthFirstSearchService} from "../../../../services/algorithms/breadth-first-search.service";
 import {FindAllAvailablePathsService} from "../../../../services/algorithms/find-all-available-paths.service";
 import {NgClass} from "@angular/common";
+import {find} from "rxjs";
 
 @Component({
   selector: 'app-all-available-paths',
@@ -32,4 +33,6 @@ export class AllAvailablePathsComponent {
     public findAllAvailablePathsService: FindAllAvailablePathsService
   ) {
   }
+
+  protected readonly find = find;
 }

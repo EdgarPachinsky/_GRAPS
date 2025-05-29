@@ -2,7 +2,7 @@
   <div class="d-flex flex-row">
     <div class="d-flex flex-row align-items-center">
       <div class="d-flex flex-row align-items-center">
-        <div class="d-flex text-color-white">Find All Available Paths</div>
+        <div class="d-flex text-color-white">All Available Paths (BFS Based)</div>
       </div>
     </div>
 
@@ -15,7 +15,17 @@
         </span>
     </button>
 
-    @if(findAllAvailablePathsService.pathDetailsList.length){
+    @if(findAllAvailablePathsService.isPlaying){
+      <button
+        (click)="findAllAvailablePathsService.pauseAnimation()"
+        class="mat-ripple mat-warn ml-5" matTooltip="Reset" mat-raised-button mat-button>
+        <span class="material-icons">
+          pause
+        </span>
+      </button>
+    }
+
+    @if(findAllAvailablePathsService.pathDetailsList.length && !findAllAvailablePathsService.isPlaying){
       <button
         [disabled]="findAllAvailablePathsService.isPlaying"
         (click)="findAllAvailablePathsService.dumpGlobals()"
@@ -29,14 +39,26 @@
     <button
       class="mat-ripple mat-warn ml-10" mat-raised-button mat-button
       (click)="findAllAvailablePathsService.toggleInputs()">
-      @if(!findAllAvailablePathsService.showInputs){Show}
-      @if(findAllAvailablePathsService.showInputs){Hide}
       Inptus
       <span class="material-icons mr-5">
         @if(!findAllAvailablePathsService.showInputs){visibility}
         @if(findAllAvailablePathsService.showInputs){visibility_off}
       </span>
     </button>
+
+    @if(findAllAvailablePathsService.pathDetailsList.length){
+<!--      @if(!findAllAvailablePathsService.showResults){Show}-->
+<!--      @if(findAllAvailablePathsService.showResults){Hide}-->
+      <button
+        class="mat-ripple mat-warn ml-10" mat-raised-button mat-button
+        (click)="findAllAvailablePathsService.toggleResults()">
+        Results
+        <span class="material-icons mr-5">
+        @if(!findAllAvailablePathsService.showResults){visibility}
+          @if(findAllAvailablePathsService.showResults){visibility_off}
+      </span>
+      </button>
+    }
   </div>
 
 
@@ -55,15 +77,27 @@
           <input matInput type="text" [formControl]="findAllAvailablePathsService.endPointControl">
         </mat-form-field>
       </div>
+
+      <div class="d-flex flex-row align-items-center mt-20 ml-20">
+        <mat-form-field class="example-form-field">
+          <mat-label>Maximum Paths Count(1~100)</mat-label>
+          <input matInput type="text" [formControl]="findAllAvailablePathsService.maximumPathsAvailableControl">
+        </mat-form-field>
+      </div>
     </div>
   }
 
-  @if(findAllAvailablePathsService.pathDetailsList.length){
+  @if(findAllAvailablePathsService.pathDetailsList.length
+    && findAllAvailablePathsService.showResults
+    ){
     <div class="d-flex flex-column mt-10 p-5">
-      <p class="mb-5">Click on path to highlight on graph</p>
+      <p> <span class="note-label text-color-warning">NOTE! </span>Application can give only 100 available paths !</p>
+      <p class="mb-5">
+        Click on path to highlight on graph
+      </p>
       @for (pathDetail of findAllAvailablePathsService.pathDetailsList; track pathDetail; let idx = $index) {
-        <div class="d-flex flex-row">
-          <div>{{pathDetail.label}}</div>
+        <div class="d-flex flex-row path-container">
+          <div class="path-label">{{pathDetail.label}}</div>
           <div class="d-flex flex-row ml-5 text-color-warning all-path-algorithm-single-path"
                [ngClass]="{'all-path-algorithm-single-path-active': findAllAvailablePathsService.highLightCurrentPath === idx}"
             (click)="findAllAvailablePathsService.highlightPath(idx)"
@@ -72,7 +106,7 @@
               @for(node of pathDetail.path; track node; let subIdx = $index){
                 <span>{{node.number}}@if(subIdx !== pathDetail.path.length - 1){<span class="ml-5 mr-5">,</span>}</span>
               }
-            <span class="ml-5">]</span>
+            <span class="ml-5">] <span class="text-color-white">[{{pathDetail.path.length}}]</span></span>
           </div>
         </div>
       }

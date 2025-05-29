@@ -1,4 +1,59 @@
 <div class="graph-settings-container mt-15 p-15">
+  <span class="mb-5 d-block text-color-white justify-content-center">
+    RGG Section <span class="text-color-warning">(Only unweighted type supported)</span>
+  </span>
+  <p>
+    <button class="mat-ripple mat-warn" mat-raised-button mat-button
+            (click)="generateGraph()">
+      <span>Generate Random Graph</span>
+      <span [@diceShake]="diceState" class="material-icons mr-5">
+        casino
+      </span>
+    </button>
+
+    <button
+      [matTooltip]="'Toggle Random Graph Generator Settings Section'"
+      class="mat-ripple mat-warn" mat-raised-button mat-button
+      (click)="toggleShowRandomGraphGeneratorSettings()">
+      <span
+        class="material-icons"
+        [class.spin-animation]="isSpinningSettings"
+        (animationend)="isSpinningSettings = false"
+      >
+        settings
+      </span>
+    </button>
+  </p>
+
+  @if(showRandomGraphGeneratorSettings){
+    <p class="mb-0">
+      <span class="text-color-white density-level mr-10">Density level <= {{canvasService.randomGraphNodeDenseControl.value}}%</span>
+      <mat-slider color="warn">
+        <input matSliderThumb [formControl]="canvasService.randomGraphNodeDenseControl">
+      </mat-slider>
+    </p>
+
+    <p>
+      <span class="text-color-white range-level mr-10">
+        Weight range {{canvasService.randomGraphWeightStartControl.value}} ~ {{canvasService.randomGraphWeightEndControl.value}}
+      </span>
+      <mat-slider color="warn" min="1" max="100">
+        <input matSliderStartThumb  [formControl]="canvasService.randomGraphWeightStartControl">
+        <input matSliderEndThumb  [formControl]="canvasService.randomGraphWeightEndControl">
+      </mat-slider>
+    </p>
+
+    <p>
+      <span class="text-color-white range-level mr-10">
+        Random Direction {{canvasService.randomGraphMinDirectionControl.value}} ~ {{canvasService.randomGraphMaxDirectionControl.value}}
+      </span>
+      <mat-slider color="warn" min="1" max="8">
+        <input matSliderStartThumb  [formControl]="canvasService.randomGraphMinDirectionControl">
+        <input matSliderEndThumb  [formControl]="canvasService.randomGraphMaxDirectionControl">
+      </mat-slider>
+    </p>
+  }
+
   <span class="mb-5 d-block text-color-white">Graph Settings</span>
   <p class="d-flex flex-row">
     <mat-button-toggle-group
@@ -18,27 +73,51 @@
     </mat-button-toggle-group>
   </p>
 
-  <span class="mb-5 d-block text-color-white">Graph Creating Mode</span>
+  <span class="mb-5 d-block text-color-white">
+    Graph Creating Mode
+
+    @if(canvasService.modeControl.value === GraphCreateMode.ADD_NODE){
+     <span class="text-color-warning">(<span class="shift-key-hint" [ngClass]="{'highlight': isShiftPressed}">Shift</span> + Click On Node will delete it)</span>
+    }
+
+    @if(canvasService.modeControl.value === GraphCreateMode.ADD_EDGE){
+      <span class="text-color-warning">(<span class="shift-key-hint" [ngClass]="{'highlight': isShiftPressed}">Shift</span> + Click On Edge will delete it)</span>
+    }
+  </span>
+
   <p>
     <mat-button-toggle-group class="mb-10" [formControl]="canvasService.modeControl" aria-label="Font Style">
       <mat-button-toggle value="addNode">Add Node</mat-button-toggle>
       <mat-button-toggle [disabled]="graphService.nodes.length < 2" value="addEdge">Add Edge</mat-button-toggle>
     </mat-button-toggle-group>
 
+    @if(canvasService.modeControl.value === GraphCreateMode.ADD_EDGE){
+      <button
+        [matTooltip]="'Regular Edge Color'"
+        class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button>
+        <ngx-colors ngx-colors-trigger [formControl]="canvasService.regularEdgeColorControl"></ngx-colors>
+      </button>
+      <button
+        [matTooltip]="'Highlighted Edge Color'"
+        class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button>
+        <ngx-colors ngx-colors-trigger [formControl]="canvasService.highlightedEdgeColorControl"></ngx-colors>
+      </button>
+    }
+
     @if(graphService.nodes.length > 1){
-      <button class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button (click)="canvasService.clearBoard()">
-        Clear
-        <span class="material-icons mr-5">
+      <button
+        [matTooltip]="'Clear Board'"
+        class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button (click)="canvasService.clearBoard()">
+        <span class="material-icons">
         clear
         </span>
       </button>
 
         <button
           class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button (click)="addToLocalExamples()"
-          matTooltip="This will create a copy of graph and save it in the localstorage. Added {{graphsArray.length}} of 3"
+          matTooltip="Copy graph into the localstorage. Added {{graphsArray.length}} of {{MAXIMUM_ALLOWED_LOCAL_EXAMPLES_COUNT}}"
         >
-          Copy Into Local Storage
-          <span class="material-icons mr-5">
+          <span class="material-icons">
           save
         </span>
         </button>
@@ -93,9 +172,9 @@
 
   @if (graphsArray.length) {
     <span class="mb-5 d-block text-color-white">Local Saved Examples</span>
-    <p class="d-flex flex-row">
+    <p class="d-flex flex-wrap">
       @for (graph of graphsArray; track graph; let idx = $index) {
-        <span class="d-flex flex-row mr-10">
+        <span class="d-flex flex-row mr-10 mt-10">
             <button class="mat-ripple mat-warn" mat-raised-button mat-button
                       (click)="canvasService.importGraph(graph)">
               <span>Draw ex.{{idx+1}}</span>
@@ -113,6 +192,7 @@
             </button>
         </span>
       }
+
     </p>
   }
 
@@ -143,7 +223,11 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <p>
-          <app-dijkstra></app-dijkstra>
+          @if(canvasService.directionTypeControl.value === DirectionTypes.DIRECTED_GRAPH){
+            <app-dijkstra></app-dijkstra>
+          }@else {
+            <app-dfs-short-long-paths></app-dfs-short-long-paths>
+          }
         </p>
       </mat-expansion-panel>
 
@@ -183,7 +267,7 @@
 
   <span class="mb-5 d-block text-color-white">Tools</span>
   <div class="d-flex flex-column mt-10">
-    <mat-accordion>
+    <mat-accordion [multi]="true">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>

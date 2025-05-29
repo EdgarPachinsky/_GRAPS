@@ -1,19 +1,83 @@
 <div class="d-flex flex-row">
-  <div class="board p-5 mr-20"
+  <div class="board p-5 mr-20 d-flex flex-column"
        [style.width]="BOARD_WIDTH+'px'" [style.height]="BOARD_HEIGHT+'px'">
-<!--    <canvas-->
-<!--      (mousemove)="handleMouseMove($event)" (mouseleave)="handleMouseLeave()"-->
-<!--      #graphCanvas class="board-canvas" [width]="BOARD_WIDTH" [height]="BOARD_HEIGHT" (click)="canvasService.handleCanvasClick($event)"></canvas>-->
+    <!--    <canvas-->
+    <!--      (mousemove)="handleMouseMove($event)" (mouseleave)="handleMouseLeave()"-->
+    <!--      #graphCanvas class="board-canvas" [width]="BOARD_WIDTH" [height]="BOARD_HEIGHT" (click)="canvasService.handleCanvasClick($event)"></canvas>-->
 
-    <canvas
-      #graphCanvas class="board-canvas" [width]="BOARD_WIDTH" [height]="BOARD_HEIGHT" (click)="canvasService.handleCanvasClick($event)"></canvas>
+    <div>
+      <canvas
+        [@slideAnimation]="currentIndex"
+        #graphCanvas
+        class="board-canvas"
+        [width]="BOARD_WIDTH"
+        [height]="BOARD_HEIGHT"
+        (click)="canvasService.handleCanvasClick($event)">
+      </canvas>
+    </div>
 
 
-<!--      <div  #zoomBox style="position: absolute; border: 1px solid black; overflow: hidden;"-->
-<!--           [style.left.px]="zoomBoxX" [style.top.px]="zoomBoxY"-->
-<!--           [style.width.px]="zoomBoxWidth" [style.height.px]="zoomBoxHeight">-->
-<!--        <canvas #zoomCanvas [width]="zoomCanvasWidth" [height]="zoomCanvasHeight"></canvas>-->
-<!--      </div>-->
+    <!--      <div  #zoomBox style="position: absolute; border: 1px solid black; overflow: hidden;"-->
+    <!--           [style.left.px]="zoomBoxX" [style.top.px]="zoomBoxY"-->
+    <!--           [style.width.px]="zoomBoxWidth" [style.height.px]="zoomBoxHeight">-->
+    <!--        <canvas #zoomCanvas [width]="zoomCanvasWidth" [height]="zoomCanvasHeight"></canvas>-->
+    <!--      </div>-->
+    <!--    <p class="mt-20 text-color-warning">-->
+    <!--      On Page {{canvasService.graphInstanceIndex+1}}-->
+    <!--    </p>-->
+    <!--    <div class="mt-10 d-flex flex-row">-->
+    <!--      <div>-->
+    <!--        <button-->
+    <!--          (click)="canvasService.onNewInstance(false)"-->
+    <!--          class="mat-ripple mat-warn" mat-raised-button mat-button [matTooltip]="'Add new instance'">-->
+    <!--          <span class="material-icons">-->
+    <!--            add-->
+    <!--          </span>-->
+    <!--        </button>-->
+    <!--      </div>-->
+    <!--      <div class="d-flex flex-row ml-20">-->
+    <!--        <button-->
+    <!--          [disabled]="canvasService.graphInstanceIndex === 0"-->
+    <!--          (click)="canvasService.onInstanceIndexChange('left')"-->
+    <!--          class="mat-ripple mat-warn" mat-raised-button mat-button>-->
+    <!--          <span class="material-icons mr-0">-->
+    <!--            west-->
+    <!--          </span>-->
+    <!--        </button>-->
+
+    <!--        <button-->
+    <!--          [disabled]="canvasService.graphInstanceIndex === graphService.graphInstances.length - 1"-->
+    <!--          (click)="canvasService.onInstanceIndexChange('right')"-->
+    <!--          class="mat-ripple mat-warn ml-10" mat-raised-button mat-button>-->
+    <!--          <span class="material-icons">-->
+    <!--            east-->
+    <!--          </span>-->
+    <!--        </button>-->
+
+    <!--      </div>-->
+
+    <!--    </div>-->
+
+    <div class="mt-15 d-flex flex-row">
+      <button
+        (click)="window.location.reload()"
+        class="mat-ripple mat-warn" mat-raised-button mat-button>
+        Refresh Page
+        <span class="material-icons mr-5">
+        sync
+        </span>
+      </button>
+
+      <button
+        [disabled]="graphService.nodes.length < 2"
+        (click)="exportCanvasAsPNG()"
+        class="mat-ripple mat-warn ml-10" mat-raised-button mat-button>
+        Export Graph as PNG
+        <span class="material-icons mr-5">
+        file_download
+        </span>
+      </button>
+    </div>
   </div>
 
   <div>

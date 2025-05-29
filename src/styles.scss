@@ -223,6 +223,18 @@ body {
 }
 .text-color-warning{
   color: rgb(239 169 161) !important;
+  .highlight{
+    padding: 2px 4px;
+    background: #324b4b;
+    border-radius: 3px;
+    color: white;
+    transition: 0.3s;
+  }
+}
+.shift-key-hint{
+  border-radius: 3px;
+  padding: 2px 4px;
+  transition: 0.3s;
 }
 .favorite-icon {
   animation: heartbeat 1.5s infinite; /* Adjust duration as needed */

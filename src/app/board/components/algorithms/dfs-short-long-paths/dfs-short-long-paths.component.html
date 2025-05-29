@@ -1,0 +1,107 @@
+<div class="algo-card d-flex flex-column">
+  <span class="mb-10"
+    [matTooltip]="'Uses DFS to explore all paths and select the shortest/longest by length (not guaranteed optimal for weighted graphs).'"
+    [matTooltipPosition]="'before'"
+  >
+    Paths (<span class="text-color-warning"><b>DFS</b></span> Based)
+  </span>
+  <div class="d-flex flex-row">
+    <div class="d-flex flex-row align-items-center">
+      <div class="d-flex flex-row align-items-center">
+        <div class="d-flex text-color-white d-flex flex-row align-items-center">
+          <mat-button-toggle-group class="" [formControl]="bfsShortestPathService.distanceControl" aria-label="Font Style">
+            <mat-button-toggle value="shortest">Shortest</mat-button-toggle>
+            <mat-button-toggle value="longest">Longest</mat-button-toggle>
+<!--            <mat-button-toggle value="both">Both</mat-button-toggle>-->
+          </mat-button-toggle-group>
+        </div>
+      </div>
+    </div>
+
+    <button
+      [disabled]="graphService.nodes.length < 2"
+      class="mat-ripple mat-warn ml-10" matTooltip="Initiate DFS Based Shortest Paths Search" mat-raised-button mat-button
+      (click)="bfsShortestPathService.BFSShortestPaths()">
+        <span class="material-icons">
+          play_arrow
+        </span>
+    </button>
+
+    <button
+      class="mat-ripple mat-warn ml-10" mat-raised-button mat-button
+      (click)="bfsShortestPathService.toggleInputs()">
+      Inptus
+      <span class="material-icons mr-5">
+        @if(!bfsShortestPathService.showInputs){visibility}
+        @if(bfsShortestPathService.showInputs){visibility_off}
+      </span>
+    </button>
+
+    @if(bfsShortestPathService.pathDetailsList.length){
+      <!--      @if(!findAllAvailablePathsService.showResults){Show}-->
+        <!--      @if(findAllAvailablePathsService.showResults){Hide}-->
+      <button
+        class="mat-ripple mat-warn ml-10" mat-raised-button mat-button
+        (click)="bfsShortestPathService.toggleResults()">
+        Results
+        <span class="material-icons mr-5">
+        @if(!bfsShortestPathService.showResults){visibility}
+          @if(bfsShortestPathService.showResults){visibility_off}
+      </span>
+      </button>
+    }
+  </div>
+
+  @if(bfsShortestPathService.showInputs){
+    <div class="d-flex flex-row">
+      <div class="d-flex flex-row align-items-center mt-20">
+        <mat-form-field class="example-form-field">
+          <mat-label>Start Point</mat-label>
+          <input matInput type="text" [formControl]="bfsShortestPathService.startPointControl">
+        </mat-form-field>
+      </div>
+
+      <div class="d-flex flex-row align-items-center mt-20 ml-20">
+        <mat-form-field class="example-form-field">
+          <mat-label>End Point</mat-label>
+          <input matInput type="text" [formControl]="bfsShortestPathService.endPointControl">
+        </mat-form-field>
+      </div>
+    </div>
+  }
+
+<!--  @if(-->
+<!--    Object.keys(bfsShortestPathService.groupedPaths).length-->
+<!--    ){-->
+<!--      @for(length of Object.keys(bfsShortestPathService.groupedPaths); track length; let index = $index){-->
+<!--        All Path With Length <span class="text-color-warning ml-10">[{{length}}]</span>-->
+<!--      }-->
+<!--  }-->
+
+  @if(bfsShortestPathService.pathDetailsList.length && bfsShortestPathService.showResults
+    ){
+    <div class="d-flex flex-column mt-10 p-5">
+      <p class="mb-10">
+        Found <span class="text-color-warning"><b>{{bfsShortestPathService.pathDetailsList.length}}</b></span>
+        available <span class="text-color-warning"><b>{{bfsShortestPathService.distanceControl.value}}</b></span> path(s),
+        with length of <span class="text-color-warning"><b>{{bfsShortestPathService.minimumOrMaximumPathLength}}</b></span><br>
+      </p>
+      <p class="mb-5">Click on path to highlight on graph</p>
+      @for (pathDetail of bfsShortestPathService.pathDetailsList; track pathDetail; let idx = $index) {
+        <div class="d-flex flex-row path-container">
+          <div class="path-label">{{pathDetail.label}}</div>
+          <div class="d-flex flex-row ml-5 text-color-warning all-path-algorithm-single-path"
+               [ngClass]="{'all-path-algorithm-single-path-active': bfsShortestPathService.highLightCurrentPath === idx}"
+               (click)="findAllAvailablePathsService.highlightPath(idx, pathDetail.path)"
+          >
+            <span class="mr-5">[</span>
+            @for(node of pathDetail.path; track node; let subIdx = $index){
+              <span>{{node.number}}@if(subIdx !== pathDetail.path.length - 1){<span class="ml-5 mr-5">,</span>}</span>
+            }
+            <span class="ml-5">]</span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
-import {Edge, Node} from "../models/graph.model";
+import {Injectable} from '@angular/core';
+import {Edge, GrapsDUMP, Node} from "../models/graph.model";
 import {UtilsService} from "./utils.service";
-import {DirectionTypes} from "../contants/graph.constants";
+import {DirectionTypes, WeightTypes} from "../contants/graph.constants";
+import {D} from "@angular/cdk/keycodes";
+import {CanvasService} from "./canvas.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +13,11 @@ export class GraphService {
   public nodes: Node[] = [];
   public edges: Edge[] = [];
 
+  public graphInstances:GrapsDUMP[] = [];
+
   constructor(
     public utilsService: UtilsService,
+    // public canvasService: CanvasService,
   ) { }
 
   toggleGraphJson(){
@@ -68,5 +73,10 @@ export class GraphService {
   }
   getWeightById(id:string){
     return this.edges.find((edge) => edge.id === id)
+  }
+
+  activateInstance(instance: GrapsDUMP){
+    this.edges = instance.edges;
+    this.nodes = instance.vertices;
   }
 }

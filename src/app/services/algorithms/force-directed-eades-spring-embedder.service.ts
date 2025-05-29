@@ -35,7 +35,15 @@ export class ForceDirectedEadesSpringEmbedderService {
 
   ForceDirectedEadesSpringEmbedder() {
     this.isPlaying = true;
-    this.createNewLayout(this.graphService.nodes, this.graphService.edges);
+    console.log(this.graphService.nodes)
+    console.log(this.graphService.edges)
+
+    try{
+      this.createNewLayout(this.graphService.nodes, this.graphService.edges);
+    }catch (e){
+      console.log(`[e]`)
+      console.log(e)
+    }
   }
 
   speedUpForceDirected(multiplier: number){
@@ -54,7 +62,7 @@ export class ForceDirectedEadesSpringEmbedderService {
         maxForceMagnitude = 0;
 
         vertexes.forEach((vertex) => {
-          maxForceMagnitude = 0;
+          // maxForceMagnitude = 0;
 
           let vertexToVertexFRepMapping:{ [key: string]: Vector } = {}
 
@@ -108,6 +116,12 @@ export class ForceDirectedEadesSpringEmbedderService {
 
 
         vertexes.forEach((vertex) => {
+          const force = vertexToForceMapping[vertex.number];
+          if (!force || isNaN(force.x) || isNaN(force.y)) {
+            // console.error('Invalid force for vertex', vertex.number, force);
+            return; // or skip this vertex
+          }
+
           vertex.x += vertexToForceMapping[vertex.number].x * FORCE_DIRECTED_EADES_SPRING_EMBEDDER_COOLDOWN;
           vertex.y += vertexToForceMapping[vertex.number].y * FORCE_DIRECTED_EADES_SPRING_EMBEDDER_COOLDOWN;
 

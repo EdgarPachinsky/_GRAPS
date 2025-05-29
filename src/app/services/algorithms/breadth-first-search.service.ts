@@ -234,9 +234,6 @@ export class BreadthFirstSearchService {
       parseInt(this.startPointControl.value?.toString() || '1')
     );
 
-    console.log(`[this.startNode]`)
-    console.log(this.startNode)
-
     this.BFSv2Rec(
       this.visitedNodesV2,
       this.startNode,
