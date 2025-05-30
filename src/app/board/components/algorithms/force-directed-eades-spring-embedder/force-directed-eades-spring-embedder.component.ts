@@ -6,6 +6,7 @@ import {
 import {GraphService} from "../../../../services/graph.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatButton} from "@angular/material/button";
+import {ALGORITHM_NAMES} from "../../../../contants/graph.constants";
 
 @Component({
   selector: 'app-force-directed-eades-spring-embedder',
@@ -25,4 +26,6 @@ export class ForceDirectedEadesSpringEmbedderComponent {
     public forceDirectedEadesSpringEmbedderService: ForceDirectedEadesSpringEmbedderService,
   ) {
   }
+
+  protected readonly ALGORITHM_NAMES = ALGORITHM_NAMES;
 }

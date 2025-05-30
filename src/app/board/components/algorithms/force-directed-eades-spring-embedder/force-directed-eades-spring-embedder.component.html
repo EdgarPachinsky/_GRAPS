@@ -1,6 +1,7 @@
 <div class="algo-card">
   <div class="d-flex flex-row align-items-center">
-    <div class="d-flex text-color-white">Force-Directed Eades Spring Embedder
+    <div class="d-flex text-color-white">
+      <span class="algorithm-name" (click)="graphService.openAlgorithmExplanationModal(ALGORITHM_NAMES.FORCE_DIRECTED_EADES_SPRING_EMBEDDER)">Force-Directed Eades Spring Embedder</span>
       <b class="ml-5 text-color-warning"> {{ forceDirectedEadesSpringEmbedderService.forceDirectedSpringEmbedderCompleteStatus }}%</b>
     </div>
     <button

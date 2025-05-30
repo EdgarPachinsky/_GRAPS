@@ -33,3 +33,14 @@ export const FORCE_DIRECTED_EADES_SPRING_EMBEDDER_EPSILON = 0.16; // Lower epsil
 export const FORCE_DIRECTED_EADES_SPRING_EMBEDDER_ITERATION_COUNT = 100000; // Start with a reasonable iteration count
 
 export const MAXIMUM_ALLOWED_LOCAL_EXAMPLES_COUNT: number = 10;
+
+export const ALGORITHM_NAMES = {
+  FORCE_DIRECTED_EADES_SPRING_EMBEDDER: 'force-directed-eades-spring-embedder',
+  DIJKSTRA: 'dijkstra',
+  DFS_BASED_PATHS: 'dfs-based-paths',
+  MST_KRUSKAL: 'mst-kruskal',
+  MST_PRIM: 'mst-prim',
+  BFS: 'bfs',
+  DFS: 'dfs',
+  ALL_PATHS_DFS_BASED: 'all-paths-dfs-based',
+}

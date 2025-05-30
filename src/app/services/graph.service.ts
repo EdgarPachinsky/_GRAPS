@@ -1,9 +1,13 @@
 import {Injectable} from '@angular/core';
 import {Edge, GrapsDUMP, Node} from "../models/graph.model";
 import {UtilsService} from "./utils.service";
-import {DirectionTypes, WeightTypes} from "../contants/graph.constants";
+import {ALGORITHM_NAMES, DirectionTypes, WeightTypes} from "../contants/graph.constants";
 import {D} from "@angular/cdk/keycodes";
 import {CanvasService} from "./canvas.service";
+import {MatDialog} from "@angular/material/dialog";
+import {
+  AlgorithmExplanationComponent
+} from "../board/components/dialogs/algorithm-explanation/algorithm-explanation.component";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +21,7 @@ export class GraphService {
 
   constructor(
     public utilsService: UtilsService,
+    public matDialog: MatDialog,
     // public canvasService: CanvasService,
   ) { }
 
@@ -78,5 +83,15 @@ export class GraphService {
   activateInstance(instance: GrapsDUMP){
     this.edges = instance.edges;
     this.nodes = instance.vertices;
+  }
+
+  openAlgorithmExplanationModal(
+    algorithm: string,
+  ){
+    this.matDialog.open(AlgorithmExplanationComponent, {
+      data: {
+        algorithm
+      }
+    })
   }
 }

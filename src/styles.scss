@@ -266,3 +266,17 @@ body {
   border-radius: 5px;
   padding: 10px;
 }
+
+.algorithm-name{
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: #222222;
+  transition: 0.3s;
+  display: inline-block;
+
+  &:hover{
+    transition: 0.3s;
+    cursor: pointer;
+    background: #323232;
+  }
+}
