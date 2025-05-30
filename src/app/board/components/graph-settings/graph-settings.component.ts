@@ -160,7 +160,7 @@ export class GraphSettingsComponent implements OnInit, OnDestroy{
   }
 
   addToLocalExamples(){
-    if(this.graphsArray.length === MAXIMUM_ALLOWED_LOCAL_EXAMPLES_COUNT){
+    if(this.graphsArray && this.graphsArray.length === MAXIMUM_ALLOWED_LOCAL_EXAMPLES_COUNT){
       this.utilsService.showSnackBar('Maximum allowed count of local example excited, please delete at least one and then try to add new graph.', 3000);
       return;
     }

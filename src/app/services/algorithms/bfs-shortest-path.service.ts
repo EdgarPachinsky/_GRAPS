@@ -28,10 +28,16 @@ export class BfsShortestPathService {
     public allAvailablePathsService: FindAllAvailablePathsService
   ) { }
 
+  toggleInputs() {
+    this.showInputs = !this.showInputs
+  }
 
-  BFSShortestPaths(){
+  toggleResults() {
+    this.showResults = !this.showResults
+  }
+
+  DFSShortestPaths(){
     this.groupedPaths = {};
-
 
     let allPaths = this.allAvailablePathsService.findAllAvailablePaths(
       true,
@@ -39,11 +45,9 @@ export class BfsShortestPathService {
       this.endPointControl.value?.toString(),
     )
 
-
     this.groupedPaths = this.groupPathsByLength(
       allPaths
     )
-
 
     let allKeysArray = Object.keys(this.groupedPaths);
 
@@ -79,6 +83,10 @@ export class BfsShortestPathService {
     }
   }
 
+  BFSShortestPaths(){
+
+  }
+
   groupPathsByLength(paths: any): Record<number, any[][]> {
     const grouped: Record<number, any[][]> = {};
 
@@ -101,12 +109,5 @@ export class BfsShortestPathService {
     }
 
     return sortedGrouped;
-  }
-
-  toggleInputs() {
-    this.showInputs = !this.showInputs
-  }
-  toggleResults() {
-    this.showResults = !this.showResults
   }
 }

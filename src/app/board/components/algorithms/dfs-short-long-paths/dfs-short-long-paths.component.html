@@ -3,7 +3,7 @@
     [matTooltip]="'Uses DFS to explore all paths and select the shortest/longest by length (not guaranteed optimal for weighted graphs).'"
     [matTooltipPosition]="'before'"
   >
-    Paths (<span class="text-color-warning"><b>DFS</b></span> Based)
+    Paths (<span class="text-color-warning"><b>{{ algorithmBased }}</b></span> Based)
   </span>
   <div class="d-flex flex-row">
     <div class="d-flex flex-row align-items-center">
@@ -21,7 +21,7 @@
     <button
       [disabled]="graphService.nodes.length < 2"
       class="mat-ripple mat-warn ml-10" matTooltip="Initiate DFS Based Shortest Paths Search" mat-raised-button mat-button
-      (click)="bfsShortestPathService.BFSShortestPaths()">
+      (click)="bfsShortestPathService.DFSShortestPaths()">
         <span class="material-icons">
           play_arrow
         </span>

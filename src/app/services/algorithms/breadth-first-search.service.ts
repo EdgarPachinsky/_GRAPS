@@ -220,13 +220,59 @@ export class BreadthFirstSearchService {
       to: nextIterationNodes
     })
 
-    nextIterationNodes.forEach((nextIterationNode) => {
-      return this.BFSv2Rec(
-        visitedNodes, nextIterationNode, result
-      )
-    })
+    if(nextIterationNodes.length)
+      nextIterationNodes.forEach((nextIterationNode) => {
+        return this.BFSv2Rec(
+          visitedNodes, nextIterationNode, result
+        )
+      })
   }
 
+  BFSv3Queue(startNode: Node) {
+    const visitedNodes: Node[] = [];
+    const result: Node[] = [];
+    const queue: Node[] = [];
+
+    queue.push(startNode);
+    visitedNodes.push(startNode);
+
+    this.pathDetails = '';
+    this.pathDetailsArray = [];
+
+    while (queue.length > 0) {
+      const currentNode = queue.shift()!;
+      result.push(currentNode);
+
+      const neighbours = this.graphService.getAllNeighbourNodes(
+        currentNode,
+        this.graphService.nodes,
+        this.canvasService.directionTypeControl?.value as DirectionTypes
+      );
+
+      const nextNodes: Node[] = [];
+
+      for (const neighbour of neighbours) {
+        const alreadyVisited = visitedNodes.find(v => v.number === neighbour.number);
+        if (!alreadyVisited) {
+          visitedNodes.push(neighbour);
+          queue.push(neighbour);
+          nextNodes.push(neighbour);
+        }
+      }
+
+      const toString = nextNodes.map(n => n.number).join(', ');
+      this.pathDetails += `From ${currentNode.number} -> ${toString ? 'To ' + toString : 'NO ANY AVAILABLE VERTEX'} <br>`;
+
+      this.pathDetailsArray.push({
+        from: currentNode.number,
+        to: nextNodes
+      });
+    }
+
+    return result; // optional, if you want to return traversal
+  }
+
+  // recursion based
   BFSv2(){
     this.dumpGlobals();
 
@@ -239,6 +285,19 @@ export class BreadthFirstSearchService {
       this.startNode,
       this.resultV2
     )
+
+    this.createNewLayout()
+  }
+
+  // queue based
+  BFSv3(){
+    this.dumpGlobals();
+
+    this.startNode = this.graphService.getVertexFromNumber(
+      parseInt(this.startPointControl.value?.toString() || '1')
+    );
+
+    this.BFSv3Queue(this.startNode)
 
     this.createNewLayout()
   }

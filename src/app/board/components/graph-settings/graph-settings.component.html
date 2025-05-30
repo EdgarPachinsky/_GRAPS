@@ -115,7 +115,7 @@
 
         <button
           class="ml-20 mat-ripple mat-warn" mat-raised-button mat-button (click)="addToLocalExamples()"
-          matTooltip="Copy graph into the localstorage. Added {{graphsArray.length}} of {{MAXIMUM_ALLOWED_LOCAL_EXAMPLES_COUNT}}"
+          matTooltip="Copy graph into the localstorage. {{graphsArray && graphsArray.length? 'Added ' + graphsArray.length + ' of ' + MAXIMUM_ALLOWED_LOCAL_EXAMPLES_COUNT: ''}}"
         >
           <span class="material-icons">
           save
@@ -170,7 +170,7 @@
   </p>
 
 
-  @if (graphsArray.length) {
+  @if (graphsArray && graphsArray.length) {
     <span class="mb-5 d-block text-color-white">Local Saved Examples</span>
     <p class="d-flex flex-wrap">
       @for (graph of graphsArray; track graph; let idx = $index) {
@@ -226,7 +226,9 @@
           @if(canvasService.directionTypeControl.value === DirectionTypes.DIRECTED_GRAPH){
             <app-dijkstra></app-dijkstra>
           }@else {
-            <app-dfs-short-long-paths></app-dfs-short-long-paths>
+            <div>
+              <app-dfs-short-long-paths [algorithmBased]="'DFS'"></app-dfs-short-long-paths>
+            </div>
           }
         </p>
       </mat-expansion-panel>
@@ -259,7 +261,7 @@
           <app-breadth-first-search></app-breadth-first-search>
           <app-depth-first-search></app-depth-first-search>
           <app-all-available-paths></app-all-available-paths>
-          <app-max-flow></app-max-flow>
+<!--          <app-max-flow></app-max-flow>-->
         </p>
       </mat-expansion-panel>
     </mat-accordion>

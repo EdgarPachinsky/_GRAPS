@@ -8,8 +8,17 @@
 
     <button
       [disabled]="graphService.nodes.length < 2 || breadthFirstSearchService.isPlaying"
-      class="mat-ripple mat-warn ml-10" matTooltip="Initiate BFS" mat-raised-button mat-button
+      class="mat-ripple mat-warn ml-10" matTooltip="Initiate BFS Recursion Based" mat-raised-button mat-button
       (click)="breadthFirstSearchService.BFSv2()">
+        <span class="material-icons">
+          play_arrow
+        </span>
+    </button>
+
+    <button
+      [disabled]="graphService.nodes.length < 2 || breadthFirstSearchService.isPlaying"
+      class="mat-ripple mat-warn ml-10" matTooltip="Initiate BFS Queue Based" mat-raised-button mat-button
+      (click)="breadthFirstSearchService.BFSv3()">
         <span class="material-icons">
           play_arrow
         </span>

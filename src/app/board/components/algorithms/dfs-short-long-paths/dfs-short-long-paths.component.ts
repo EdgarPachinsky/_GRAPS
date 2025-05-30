@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
     MatAccordion,
@@ -40,6 +40,8 @@ import {FindAllAvailablePathsService} from "../../../../services/algorithms/find
   styleUrl: './dfs-short-long-paths.component.scss'
 })
 export class DfsShortLongPathsComponent {
+  @Input() algorithmBased: string = 'DFS';
+
   constructor(
     public  graphService: GraphService,
     public  canvasService: CanvasService,

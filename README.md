@@ -1,27 +1,35 @@
-# GraphVisualisations
+# 🧠 Graph Algorithms Visualizer
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.4.
+A powerful and interactive graph algorithm visualizer built with modern web technologies. Explore, and understand core graph algorithms through clean visuals and intuitive UI.
 
-## Development server
+🌐 **Live Demo**: [_Graps](https://graps-6ed35.web.app/)
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+---
 
-## Code scaffolding
+## ✨ Features
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- 🎲 **Random Graph Generation** — Easily generate graphs with custom settings.
+- 📤 **Import/Export JSON** — Save and load graph structures.
+- 🖼️ **Export to PNG** — Capture and save the current canvas view.
+- 📊 **Interactive UI** — Click on nodes/edges to explore behaviors.
 
-## Build
+---
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## 📚 Implemented Algorithms
 
-## Running unit tests
+### 🧲 Layout Algorithms
+- **Force-Directed Spring Embedder**
+  - Eades-style force-directed layout for automatic graph positioning.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### 🔎 Pathfinding
+- **Dijkstra's Algorithm** (Shortest Path)
+- **DFS-based Short & Long Path Detection**
 
-## Running end-to-end tests
+### 🌲 Minimum Spanning Trees
+- **Prim's Algorithm**
+- **Kruskal's Algorithm**
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### 🔁 Traversal
+- **Breadth First Search (BFS)**
+- **Depth First Search (DFS)**
+- **All Available Paths (DFS Based)**

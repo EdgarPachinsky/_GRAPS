@@ -2,13 +2,13 @@
   <div class="d-flex flex-row">
     <div class="d-flex flex-row align-items-center">
       <div class="d-flex flex-row align-items-center">
-        <div class="d-flex text-color-white">All Available Paths (BFS Based)</div>
+        <div class="d-flex text-color-white">All Available Paths (DFS Based)</div>
       </div>
     </div>
 
     <button
       [disabled]="graphService.nodes.length < 2 || findAllAvailablePathsService.isPlaying"
-      class="mat-ripple mat-warn ml-10" matTooltip="Initiate BFS" mat-raised-button mat-button
+      class="mat-ripple mat-warn ml-10" mat-raised-button mat-button
       (click)="findAllAvailablePathsService.findAllAvailablePaths()">
         <span class="material-icons">
           play_arrow
