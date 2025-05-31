@@ -8,6 +8,7 @@ import {BreadthFirstSearchService} from "../../../../services/algorithms/breadth
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
+import {ALGORITHM_NAMES} from "../../../../contants/graph.constants";
 
 @Component({
   selector: 'app-breadth-first-search',
@@ -30,4 +31,6 @@ export class BreadthFirstSearchComponent {
     public breadthFirstSearchService: BreadthFirstSearchService
   ) {
   }
+
+    protected readonly ALGORITHM_NAMES = ALGORITHM_NAMES;
 }

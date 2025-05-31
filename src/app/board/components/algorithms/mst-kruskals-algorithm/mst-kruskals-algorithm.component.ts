@@ -4,6 +4,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MstKruskalsAlgorithmService} from "../../../../services/algorithms/mst-kruskals-algorithm.service";
 import {GraphService} from "../../../../services/graph.service";
 import {CanvasService} from "../../../../services/canvas.service";
+import {ALGORITHM_NAMES} from "../../../../contants/graph.constants";
 
 @Component({
   selector: 'app-mst-kruskals-algorithm',
@@ -23,4 +24,6 @@ export class MstKruskalsAlgorithmComponent {
     public mstKruskalsAlgorithmService : MstKruskalsAlgorithmService
   ) {
   }
+
+    protected readonly ALGORITHM_NAMES = ALGORITHM_NAMES;
 }

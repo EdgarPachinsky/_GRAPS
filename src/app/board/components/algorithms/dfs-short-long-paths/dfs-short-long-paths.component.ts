@@ -16,6 +16,7 @@ import {CanvasService} from "../../../../services/canvas.service";
 import {BfsShortestPathService} from "../../../../services/algorithms/bfs-shortest-path.service";
 import {NgClass} from "@angular/common";
 import {FindAllAvailablePathsService} from "../../../../services/algorithms/find-all-available-paths.service";
+import {ALGORITHM_NAMES} from "../../../../contants/graph.constants";
 
 @Component({
   selector: 'app-dfs-short-long-paths',
@@ -51,4 +52,5 @@ export class DfsShortLongPathsComponent {
   }
 
   protected readonly Object = Object;
+    protected readonly ALGORITHM_NAMES = ALGORITHM_NAMES;
 }

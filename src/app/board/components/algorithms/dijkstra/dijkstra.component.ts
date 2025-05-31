@@ -7,6 +7,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
+import {ALGORITHM_NAMES} from "../../../../contants/graph.constants";
 
 @Component({
   selector: 'app-dijkstra',
@@ -30,4 +31,6 @@ export class DijkstraComponent {
     public dijkstraService: DijkstraService
   ) {
   }
+
+    protected readonly ALGORITHM_NAMES = ALGORITHM_NAMES;
 }

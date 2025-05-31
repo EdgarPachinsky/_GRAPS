@@ -268,13 +268,19 @@ body {
 }
 
 .algorithm-name{
-  padding: 2px 5px;
+  padding: 2px 7px;
   border-radius: 3px;
   background: #222222;
   transition: 0.3s;
   display: inline-block;
+  color: #dcdcdc;
+
+  &.short-long-paths{
+    margin-right: auto;
+  }
 
   &:hover{
+    color: #ffffff;
     transition: 0.3s;
     cursor: pointer;
     background: #323232;

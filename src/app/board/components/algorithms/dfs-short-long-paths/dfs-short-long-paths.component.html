@@ -1,10 +1,8 @@
 <div class="algo-card d-flex flex-column">
-  <span class="mb-10"
-    [matTooltip]="'Uses DFS to explore all paths and select the shortest/longest by length (not guaranteed optimal for weighted graphs).'"
-    [matTooltipPosition]="'before'"
-  >
+  <span class="algorithm-name short-long-paths mb-10" (click)="graphService.openAlgorithmExplanationModal(ALGORITHM_NAMES.DFS_BASED_PATHS)">
     Paths (<span class="text-color-warning"><b>{{ algorithmBased }}</b></span> Based)
   </span>
+
   <div class="d-flex flex-row">
     <div class="d-flex flex-row align-items-center">
       <div class="d-flex flex-row align-items-center">

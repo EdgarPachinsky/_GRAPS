@@ -8,6 +8,7 @@ import {DepthFirstSearchService} from "../../../../services/algorithms/depth-fir
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {ReactiveFormsModule} from "@angular/forms";
+import {ALGORITHM_NAMES} from "../../../../contants/graph.constants";
 
 @Component({
   selector: 'app-depth-first-search',
@@ -30,4 +31,6 @@ export class DepthFirstSearchComponent {
     public depthFirstSearchService: DepthFirstSearchService
   ) {
   }
+
+    protected readonly ALGORITHM_NAMES = ALGORITHM_NAMES;
 }
