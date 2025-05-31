@@ -8,6 +8,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   AlgorithmExplanationComponent
 } from "../board/components/dialogs/algorithm-explanation/algorithm-explanation.component";
+import {HowToUseComponent} from "../board/components/dialogs/how-to-use/how-to-use.component";
 
 @Injectable({
   providedIn: 'root'
@@ -93,5 +94,9 @@ export class GraphService {
         algorithm
       }
     })
+  }
+
+  openHowToUse(){
+    this.matDialog.open(HowToUseComponent, {})
   }
 }

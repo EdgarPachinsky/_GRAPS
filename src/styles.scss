@@ -237,7 +237,12 @@ body {
   transition: 0.3s;
 }
 .favorite-icon {
-  animation: heartbeat 1.5s infinite; /* Adjust duration as needed */
+  animation: heartbeat 1.5s infinite;
+  transition: animation-duration 0.3s ease;
+
+  &:hover {
+    animation-duration: 0.5s; /* Faster heartbeat on hover */
+  }
 }
 
 @keyframes heartbeat {
@@ -245,7 +250,7 @@ body {
     transform: scale(1); /* Initial scale */
   }
   20% {
-    transform: scale(1.1); /* Scale up slightly */
+    transform: scale(1.2); /* Scale up slightly */
   }
   40% {
     transform: scale(1); /* Back to original scale */

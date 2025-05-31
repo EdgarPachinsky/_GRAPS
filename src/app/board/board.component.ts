@@ -7,7 +7,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {Subscription} from "rxjs";
 import {MatButton} from "@angular/material/button";
 import {GraphSettingsComponent} from "./components/graph-settings/graph-settings.component";
-import {BOARD_HEIGHT, BOARD_WIDTH, WeightTypes} from "../contants/graph.constants";
+import {ALGORITHM_NAMES, BOARD_HEIGHT, BOARD_WIDTH, WeightTypes} from "../contants/graph.constants";
 import {GraphInfoComponent} from "./components/graph-info/graph-info.component";
 import {NgIf} from "@angular/common";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -215,4 +215,5 @@ export class BoardComponent implements AfterViewInit, OnDestroy{
     a.click();
   }
 
+  protected readonly ALGORITHM_NAMES = ALGORITHM_NAMES;
 }
