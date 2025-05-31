@@ -239,6 +239,8 @@ body {
 .favorite-icon {
   animation: heartbeat 1.5s infinite;
   transition: animation-duration 0.3s ease;
+  position: relative;
+  top: 3px;
 
   &:hover {
     animation-duration: 0.5s; /* Faster heartbeat on hover */

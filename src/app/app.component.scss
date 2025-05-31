@@ -7,6 +7,14 @@
   top:0;
   z-index:10;
 }
+.app-icon{
+  width: 28px;
+  z-index: 10;
+  height: 28px;
+  position: relative;
+  top: 5px;
+  scale: 1.2;
+}
 .app-title{
   letter-spacing: 2px;
   font-size: 25px;

@@ -1,5 +1,6 @@
 <mat-toolbar class="toolbar-container pb-10">
   <div class="container">
+    <img class="app-icon" ngSrc="assets/icons/app-icon-no-bg.png" alt="" width="28" height="28">
     <span class="app-title mr-9">
       _GRAPS
       <div class="version-info mt-10 pl-0 text-color-warning">
@@ -8,7 +9,11 @@
         </span>
       </div>
     </span>
-    <button mat-icon-button class="example-icon favorite-icon text-color-warning" aria-label="Example icon-button with heart icon">
+    <button
+      [matTooltip]="currentTooltip"
+      [matTooltipPosition]="'right'"
+      (mouseenter)="changeTooltip()"
+      mat-icon-button class="favorite-icon text-color-warning" aria-label="Example icon-button with heart icon">
       <mat-icon>favorite</mat-icon>
     </button>
   </div>
