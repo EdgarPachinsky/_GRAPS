@@ -1,3 +1,13 @@
+@if(achievementsService.showSaluteAnimation){
+  <div class="sky-salute">
+    @for(emoji of achievementsService.saluteEmojis; track emoji){
+      <span class="emoji" [ngStyle]="emoji.style">
+        {{ emoji.char }}
+      </span>
+    }
+  </div>
+}
+
 <mat-toolbar class="toolbar-container pb-10">
   <div class="container">
     <img class="app-icon" ngSrc="assets/icons/app-icon-no-bg.png" alt="" width="28" height="28">

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {BoardComponent} from "./board/board.component";
 import {MatCard, MatCardActions} from "@angular/material/card";
@@ -7,16 +7,19 @@ import {MatIconButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {BOARD_HEIGHT, BOARD_WIDTH} from "./contants/graph.constants";
 import {MatTooltip} from "@angular/material/tooltip";
-import {NgOptimizedImage} from "@angular/common";
+import {NgOptimizedImage, NgStyle} from "@angular/common";
+import {AchievementsService} from "./services/achievements.service";
+import {ACHIEVEMENT_CATEGORY, ACHIEVEMENT_ID} from "./models/achievements.model";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, BoardComponent, MatCard, MatCardActions, MatToolbar, MatIconButton, MatIcon, MatTooltip, NgOptimizedImage],
+  imports: [RouterOutlet, BoardComponent, MatCard, MatCardActions, MatToolbar, MatIconButton, MatIcon, MatTooltip, NgOptimizedImage, NgStyle],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit{
+
   public tooltips = [
     "Graph it till you make it.",
     "Edges connect, just like we do.",
@@ -123,8 +126,20 @@ export class AppComponent {
   ];
   public currentTooltip = this.tooltips[0];
 
+  constructor(
+    public achievementsService: AchievementsService
+  ) {
+  }
+
+  ngAfterViewInit() {
+    console.log(`VIEW INITIALIZED, LOADING LOCAL ACHIEVEMENTS`)
+    this.achievementsService.loadLocalAchievements();
+  }
+
   changeTooltip() {
     const random = Math.floor(Math.random() * this.tooltips.length);
-    setTimeout(() => this.currentTooltip = this.tooltips[random], 0)
+    setTimeout(() => this.currentTooltip = this.tooltips[random], 0);
+
+    this.achievementsService.addProgressForCountLikeAchievements(ACHIEVEMENT_CATEGORY.HEART_HOVER);
   }
 }

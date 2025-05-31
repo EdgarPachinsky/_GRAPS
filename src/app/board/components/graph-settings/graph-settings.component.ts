@@ -1,4 +1,4 @@
-import {Component, HostListener, OnDestroy, OnInit, signal} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {MatButton} from "@angular/material/button";
 import {MatButtonToggle, MatButtonToggleGroup} from "@angular/material/button-toggle";
 import {CanvasService} from "../../../services/canvas.service";
@@ -23,7 +23,8 @@ import {DijkstraComponent} from "../algorithms/dijkstra/dijkstra.component";
 import {MstKruskalsAlgorithmComponent} from "../algorithms/mst-kruskals-algorithm/mst-kruskals-algorithm.component";
 import {MstPrimsAlgorithmComponent} from "../algorithms/mst-prims-algorithm/mst-prims-algorithm.component";
 import {
-  MatAccordion, MatExpansionModule,
+  MatAccordion,
+  MatExpansionModule,
   MatExpansionPanel,
   MatExpansionPanelDescription,
   MatExpansionPanelTitle
@@ -37,9 +38,11 @@ import {DepthFirstSearchComponent} from "../algorithms/depth-first-search/depth-
 import {AllAvailablePathsComponent} from "../algorithms/all-available-paths/all-available-paths.component";
 import {RandomGraphGeneratorService} from "../../../services/random-graph-generator.service";
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import {MatSlider, MatSliderModule, MatSliderThumb} from "@angular/material/slider";
+import {MatSliderModule} from "@angular/material/slider";
 import {NgxColorsModule} from "ngx-colors";
 import {DfsShortLongPathsComponent} from "../algorithms/dfs-short-long-paths/dfs-short-long-paths.component";
+import {AchievementsService} from "../../../services/achievements.service";
+import {ACHIEVEMENT_CATEGORY} from "../../../models/achievements.model";
 
 @Component({
   selector: 'app-graph-settings',
@@ -109,6 +112,7 @@ export class GraphSettingsComponent implements OnInit, OnDestroy{
     public canvasService: CanvasService,
     public utilsService: UtilsService,
     public randomGraphGeneratorService: RandomGraphGeneratorService,
+    public achievementsService: AchievementsService,
   ) {
   }
 
@@ -166,13 +170,17 @@ export class GraphSettingsComponent implements OnInit, OnDestroy{
     }
     this.utilsService.addGraph(this.canvasService.graphJson);
     this.updateLocalGraphsArray();
+
+    this.achievementsService.addProgressForCountLikeAchievements(ACHIEVEMENT_CATEGORY.LOCAL_SAVE)
   }
 
   generateGraph(){
     this.diceState = 'shaking';
     setTimeout(() => this.diceState = 'idle', 600); // reset after animation
 
-    this.randomGraphGeneratorService.generateRandomGraph()
+    this.randomGraphGeneratorService.generateRandomGraph();
+
+    this.achievementsService.addProgressForCountLikeAchievements(ACHIEVEMENT_CATEGORY.RANDOM_GENERATOR)
   }
 
   toggleShowRandomGraphGeneratorSettings(){

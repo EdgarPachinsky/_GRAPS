@@ -1,0 +1,41 @@
+<mat-dialog-content>
+
+  <div>
+
+    @for (achievement of achievementsService.DEFAULT_ACHIEVEMENTS; track achievement.id) {
+      <mat-card class="example-card mb-20" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>{{ achievement.name }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>{{ achievement.description }}</p>
+        </mat-card-content>
+        <mat-card-footer class="example-card-footer">
+
+          <button
+            [matTooltip]="'Progress'"
+            class="mat-ripple mat-warn" mat-raised-button mat-button>
+            {{ achievementsService.checkNumericAchievementProgress(achievement.id) || 0 }} %
+            <span class="material-icons mr-5">
+              trending_up
+            </span>
+          </button>
+
+          <button
+            [matTooltip]="achievementsService.checkIfLockedOrUnlocked(achievement.id) !== 'locked'?'Unlocked':'Locked'"
+            class="mat-ripple mat-warn ml-10" mat-raised-button mat-button>
+            <span class="material-icons text-color-warning">
+                @if (achievementsService.checkIfLockedOrUnlocked(achievement.id) !== 'locked') {lock_open} @else {lock}
+            </span>
+          </button>
+
+          <button
+            [matTooltip]="ACHIEVEMENT_CATEGORY_INFO[achievement.category].description"
+            class="mat-ripple mat-warn ml-10" mat-raised-button mat-button>
+            {{ ACHIEVEMENT_CATEGORY_INFO[achievement.category].name }}
+          </button>
+        </mat-card-footer>
+      </mat-card>
+    }
+  </div>
+</mat-dialog-content>

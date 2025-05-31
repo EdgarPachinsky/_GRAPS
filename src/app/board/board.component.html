@@ -53,9 +53,7 @@
     <!--            east-->
     <!--          </span>-->
     <!--        </button>-->
-
     <!--      </div>-->
-
     <!--    </div>-->
 
     <div class="mt-15 d-flex flex-row">
@@ -69,12 +67,21 @@
       </button>
 
       <button
+        (click)="graphService.openAchievements()"
+        class="mat-ripple mat-warn ml-10" mat-raised-button mat-button>
+        Achievements @if(achievementsService.unlockedAchievementCount){[ {{ achievementsService.unlockedAchievementCount }} Unlocked ]}
+        <span class="material-icons mr-5">
+          emoji_events
+        </span>
+      </button>
+
+      <button
         [disabled]="graphService.nodes.length < 2"
         (click)="exportCanvasAsPNG()"
         class="mat-ripple mat-warn ml-10" mat-raised-button mat-button>
         Export Graph as PNG
         <span class="material-icons mr-5">
-        file_download
+          file_download
         </span>
       </button>
     </div>

@@ -9,6 +9,7 @@ import {
   AlgorithmExplanationComponent
 } from "../board/components/dialogs/algorithm-explanation/algorithm-explanation.component";
 import {HowToUseComponent} from "../board/components/dialogs/how-to-use/how-to-use.component";
+import {AchievementsComponent} from "../board/components/dialogs/achievements/achievements.component";
 
 @Injectable({
   providedIn: 'root'
@@ -98,5 +99,11 @@ export class GraphService {
 
   openHowToUse(){
     this.matDialog.open(HowToUseComponent, {})
+  }
+
+  openAchievements(){
+    this.matDialog.open(AchievementsComponent, {
+      autoFocus: false
+    })
   }
 }

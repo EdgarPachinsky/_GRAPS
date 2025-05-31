@@ -19,6 +19,7 @@ import {
   query,
   group
 } from '@angular/animations';
+import {AchievementsService} from "../services/achievements.service";
 
 
 @Component({
@@ -112,6 +113,7 @@ export class BoardComponent implements AfterViewInit, OnDestroy{
   constructor(
     public graphService: GraphService,
     public canvasService: CanvasService,
+    public achievementsService: AchievementsService,
   ) {
   }
 
