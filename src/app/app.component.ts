@@ -132,8 +132,7 @@ export class AppComponent implements AfterViewInit{
   }
 
   ngAfterViewInit() {
-    console.log(`VIEW INITIALIZED, LOADING LOCAL ACHIEVEMENTS`)
-    this.achievementsService.loadLocalAchievements();
+    this.achievementsService.loadLocalAchievementsModules();
   }
 
   changeTooltip() {
@@ -141,5 +140,6 @@ export class AppComponent implements AfterViewInit{
     setTimeout(() => this.currentTooltip = this.tooltips[random], 0);
 
     this.achievementsService.addProgressForCountLikeAchievements(ACHIEVEMENT_CATEGORY.HEART_HOVER);
+    this.achievementsService.addProgressForHeartUniqueMessages(random);
   }
 }

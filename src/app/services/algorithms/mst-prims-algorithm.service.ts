@@ -4,6 +4,8 @@ import {Edge, Node} from "../../models/graph.model";
 import {GraphService} from "../graph.service";
 import {CanvasService} from "../canvas.service";
 import {DirectionTypes} from "../../contants/graph.constants";
+import {ACHIEVEMENT_ID} from "../../models/achievements.model";
+import {AchievementsService} from "../achievements.service";
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +31,7 @@ export class MstPrimsAlgorithmService {
   constructor(
     public graphService: GraphService,
     public canvasService: CanvasService,
+    public achievementsService: AchievementsService,
   ) {
 
   }
@@ -98,8 +101,6 @@ export class MstPrimsAlgorithmService {
         break;
       }
 
-      console.log(`this.visitedVertexes ` , [...this.visitedVertexes])
-
       this.canvasService.drawGraph(
         false,
         this.edgesToHighLight
@@ -126,6 +127,13 @@ export class MstPrimsAlgorithmService {
   }
 
   PrimsMST(){
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.TREE_HUGGER, "Prim"
+    )
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.ALGOHOLIC, "Prim"
+    )
+
     this.isPlaying = true;
     this.totalCostOfMinimumSpanningTree = 0;
     this.edgesToHighLight = [];

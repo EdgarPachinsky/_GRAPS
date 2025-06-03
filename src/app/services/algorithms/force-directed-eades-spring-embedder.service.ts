@@ -13,6 +13,8 @@ import {CanvasService} from "../canvas.service";
 import {Vector} from "../../classes/vector";
 import {GraphService} from "../graph.service";
 import {FormControl, Validators} from "@angular/forms";
+import {ACHIEVEMENT_ID} from "../../models/achievements.model";
+import {AchievementsService} from "../achievements.service";
 
 @Injectable({
   providedIn: 'root'
@@ -30,19 +32,18 @@ export class ForceDirectedEadesSpringEmbedderService {
   constructor(
     public graphService: GraphService,
     public canvasService: CanvasService,
+    public achievementsService: AchievementsService,
   ) {
   }
 
   ForceDirectedEadesSpringEmbedder() {
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.ALGOHOLIC, "Eades"
+    )
     this.isPlaying = true;
-    console.log(this.graphService.nodes)
-    console.log(this.graphService.edges)
-
     try{
       this.createNewLayout(this.graphService.nodes, this.graphService.edges);
     }catch (e){
-      console.log(`[e]`)
-      console.log(e)
     }
   }
 

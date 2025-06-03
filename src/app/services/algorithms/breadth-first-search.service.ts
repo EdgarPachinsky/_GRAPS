@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
-import {Subscription} from "rxjs";
 import {CanvasService} from "../canvas.service";
 import {GraphService} from "../graph.service";
 import {Edge, Node} from "../../models/graph.model";
 import {DirectionTypes} from "../../contants/graph.constants";
 import {FormControl, Validators} from "@angular/forms";
+import {AchievementsService} from "../achievements.service";
+import {ACHIEVEMENT_CATEGORY, ACHIEVEMENT_ID} from "../../models/achievements.model";
 
 interface BFSLayer {
   // ley will act like node number
@@ -49,6 +50,7 @@ export class BreadthFirstSearchService {
   constructor(
     public graphService:GraphService,
     public canvasService: CanvasService,
+    public achievementsService: AchievementsService,
   ) {
 
   }
@@ -152,8 +154,8 @@ export class BreadthFirstSearchService {
     this.generateLayers(neighbourNodes, this.BFSLayers[firstNode.number].nextLayer, this.visitedNodes);
 
     // console.log(`++++++++++++++ this.BFSLayers ++++++++++++++`)
-    console.log(this.BFSLayers)
-    console.log(`this.iterationCount ${this.iterationCount}`)
+    // console.log(this.BFSLayers)
+    // console.log(`this.iterationCount ${this.iterationCount}`)
   }
 
   generateLayers(currentNodeNeighbours: Node[], layer: BFSLayer, visitedNodes: Node[]){
@@ -274,6 +276,13 @@ export class BreadthFirstSearchService {
 
   // recursion based
   BFSv2(){
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.THE_TRAVERSER, "BFS"
+    )
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.ALGOHOLIC, "BFS"
+    )
+
     this.dumpGlobals();
 
     this.startNode = this.graphService.getVertexFromNumber(

@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {FindAllAvailablePathsService} from "./find-all-available-paths.service";
 import {FormControl, Validators} from "@angular/forms";
 import {Node} from "../../models/graph.model";
+import {ACHIEVEMENT_ID} from "../../models/achievements.model";
+import {AchievementsService} from "../achievements.service";
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +27,8 @@ export class BfsShortestPathService {
   public highLightCurrentPath: number = -1;
 
   constructor(
-    public allAvailablePathsService: FindAllAvailablePathsService
+    public allAvailablePathsService: FindAllAvailablePathsService,
+    public achievementsService: AchievementsService,
   ) { }
 
   toggleInputs() {
@@ -36,7 +39,12 @@ export class BfsShortestPathService {
     this.showResults = !this.showResults
   }
 
+  // TODO: name mismatch move to proper service
   DFSShortestPaths(){
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.ALGOHOLIC, "ShortLongPathsDFS"
+    )
+
     this.groupedPaths = {};
 
     let allPaths = this.allAvailablePathsService.findAllAvailablePaths(

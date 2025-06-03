@@ -72,11 +72,5 @@ export class MaxFlowService {
   maxFlowStart(){
     this.startNode = this.graphService.getVertexFromNumber(1);
     this.endNode = this.graphService.getVertexFromNumber(6);
-
-    console.log(`MAX FLOW START`)
-    console.log(this.startNode)
-    console.log(this.endNode)
-    console.log(`----------------------`)
-
   }
 }

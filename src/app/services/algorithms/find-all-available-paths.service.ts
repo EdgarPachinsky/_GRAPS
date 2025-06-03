@@ -5,6 +5,8 @@ import {CanvasService} from "../canvas.service";
 import {FormControl, Validators} from "@angular/forms";
 import {Edge, Node} from "../../models/graph.model";
 import {DirectionTypes} from "../../contants/graph.constants";
+import {ACHIEVEMENT_ID} from "../../models/achievements.model";
+import {AchievementsService} from "../achievements.service";
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +44,7 @@ export class FindAllAvailablePathsService {
   constructor(
     public graphService: GraphService,
     public canvasService: CanvasService,
+    public achievementsService: AchievementsService,
   ) {
   }
 
@@ -208,6 +211,10 @@ export class FindAllAvailablePathsService {
     }
 
     if(!callFromShortestPathsService){
+      this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+        ACHIEVEMENT_ID.ALGOHOLIC, "AllPaths"
+      )
+
       this.maximumPathsAvailableControl.disable();
       this.startPointControl.disable();
       this.endPointControl.disable();

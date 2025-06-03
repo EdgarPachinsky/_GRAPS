@@ -1,3 +1,8 @@
+export const enum ACHIEVEMENT_LOCAL_STORAGE_KEYS {
+  GLOBAL = 'global_achievements',
+  HEART_UNIQUE_MESSAGE = 'heart_unique_message_achievements',
+}
+
 export const enum ACHIEVEMENT_ID {
   // HEART INTERACTIONS
   HEART_GAZER_20 = 'heartGazer20',
@@ -60,7 +65,8 @@ export const enum ACHIEVEMENT_CATEGORY {
   ALGORITHM_RUN = 'algorithm_run',
 
   ALGORITHM_COMBO = 'algorithm_combo', // For combining multiple algorithms
-  DELETION = 'deletion',             // For deleting nodes/edges
+  NODE_DELETION = 'node_deletion',
+  EDGE_DELETION = 'edge_deletion',
   MISCHIEVOUS = 'mischievous',       // For quirky/unusual actions
   SECRET_INTERACTIONS = 'secret_interactions', // For Konami code, Heart of GRAPS combo
   META = 'meta_discovery'            // For finding hidden stuff or external interaction
@@ -72,8 +78,8 @@ export interface CategoryInfo {
 }
 
 export interface AchievementCriteria {
-  type?: 'count' | 'sequence' | 'combo' | 'boolean' | 'custom';
-  ranAlgorithms?: Partial<Record<'DFS' | 'BFS' | 'Dijkstra' | 'Kruskal' | 'Prim' | 'AllPaths' | 'Eades', boolean>>;
+  type?: 'count' | 'sequence' | 'combo' | 'boolean' | 'custom' | 'runAlgorithm';
+  ranAlgorithms?: Partial<Record<'DFS' | 'BFS' | 'Dijkstra' | 'Kruskal' | 'Prim' | 'AllPaths' | 'Eades' | 'ShortLongPathsDFS', boolean>>;
   zoomHistory?: any;
   sequence?: any;
   hovered?: any;
@@ -90,6 +96,6 @@ export interface Achievement {
   criteria: AchievementCriteria;
   isUnlocked: boolean;
   progress?: number;
-  unlockedOn?: Date;
+  unlockedOn?: string;
   category: ACHIEVEMENT_CATEGORY
 }

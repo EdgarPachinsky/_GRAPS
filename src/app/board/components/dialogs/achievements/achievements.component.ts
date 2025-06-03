@@ -6,13 +6,14 @@ import {MatChipsModule} from "@angular/material/chips";
 import {ACHIEVEMENT_CATEGORY_INFO} from "../../../../contants/achievements.constants";
 import {MatTooltip} from "@angular/material/tooltip";
 import {MatButton} from "@angular/material/button";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-achievements',
   standalone: true,
   imports: [
     MatDialogContent,
-    MatCardModule, MatChipsModule, MatTooltip, MatButton
+    MatCardModule, MatChipsModule, MatTooltip, MatButton, DatePipe
   ],
   templateUrl: './achievements.component.html',
   styleUrl: './achievements.component.scss'

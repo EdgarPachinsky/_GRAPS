@@ -3,6 +3,8 @@ import {Subscription} from "rxjs";
 import {Edge, Node} from "../../models/graph.model";
 import {GraphService} from "../graph.service";
 import {CanvasService} from "../canvas.service";
+import {AchievementsService} from "../achievements.service";
+import {ACHIEVEMENT_ID} from "../../models/achievements.model";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +28,7 @@ export class MstKruskalsAlgorithmService {
   constructor(
     public graphService: GraphService,
     public canvasService: CanvasService,
+    public achievementsService: AchievementsService,
   ) {
 
   }
@@ -139,6 +142,13 @@ export class MstKruskalsAlgorithmService {
   }
 
   KruskalsMST(){
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.TREE_HUGGER, "Kruskal"
+    )
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.ALGOHOLIC, "Kruskal"
+    )
+
     this.isPlaying = true;
     this.setOfSubSets = [[]];
     this.edgesToHighLight = [];

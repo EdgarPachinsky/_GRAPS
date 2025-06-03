@@ -5,6 +5,8 @@ import {Edge, Node} from "../../models/graph.model";
 import {FormControl, Validators} from "@angular/forms";
 import {from, Subscription} from "rxjs";
 import {DirectionTypes} from "../../contants/graph.constants";
+import {ACHIEVEMENT_CATEGORY, ACHIEVEMENT_ID} from "../../models/achievements.model";
+import {AchievementsService} from "../achievements.service";
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +43,7 @@ export class DijkstraService {
   constructor(
     public graphService: GraphService,
     public canvasService: CanvasService,
+    public achievementsService: AchievementsService,
   ) {
 
     this.$subscriptions.add(
@@ -72,6 +75,14 @@ export class DijkstraService {
   }
 
   Diijkstra() {
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.SHORTEST_ROMANTIC, "Dijkstra"
+    )
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.ALGOHOLIC, "Dijkstra"
+    )
+
+
     this.dropGlobals();
     this.findShortestPath();
 

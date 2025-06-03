@@ -138,16 +138,11 @@ export class BoardComponent implements AfterViewInit, OnDestroy{
     this.ctx = this.canvasRef.nativeElement.getContext('2d')!;
     // this.zoomCtx = this.zoomCanvasRef.nativeElement.getContext('2d')!;
 
-    console.log(`Canvas CONTEXT in [BOARD COMPONENT][${this.ctx}]`);
-    console.log(`Canvas REF in [BOARD COMPONENT][${this.ctx}]`);
-
     this.canvasService.setContext(this.ctx)
     this.canvasService.setCanvasRef(this.canvasRef)
 
     this.$subscriptions.add(
       this.canvasService.modeControl.valueChanges.subscribe((mode) => {
-        console.log(`Canvas Mode Selected: [${mode}]`);
-
         this.canvasService.selectedNode = null; // Deselect any node when changing modes
       })
     )

@@ -15,6 +15,8 @@ import {
   NODE_RADIUS, NODE_TO_NODE_EDGE_INSIDE_TEXT_SIZE,
   WeightTypes
 } from "../contants/graph.constants";
+import {AchievementsService} from "./achievements.service";
+import {ACHIEVEMENT_CATEGORY} from "../models/achievements.model";
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +74,7 @@ export class CanvasService {
   constructor(
     public graphService: GraphService,
     public utilsService: UtilsService,
+    public achievementsService: AchievementsService,
   ) {
     this.localGraphExampleNameControl.disable()
     this.localGraphExampleDescControl.disable()
@@ -115,11 +118,11 @@ export class CanvasService {
               edge.from.number !== nodeToDelete.number &&
               edge.to.number !== nodeToDelete.number
           );
-
-
-
-        this.drawGraph(false);
         this.utilsService.showSnackBar(`Node[${nodeToDelete.number}] deleted`);
+        this.achievementsService.addProgressForCountLikeAchievements(
+          ACHIEVEMENT_CATEGORY.NODE_DELETION
+        )
+        this.drawGraph(false);
         return;
       }
 
@@ -136,6 +139,7 @@ export class CanvasService {
           this.graphInstanceIndex
         ].vertices.push({x, y, number});
 
+        this.achievementsService.addProgressForCountLikeAchievements(ACHIEVEMENT_CATEGORY.NODE_CREATOR)
         this.drawGraph(false);
       }
 
@@ -199,6 +203,8 @@ export class CanvasService {
             id: nodeId, isReverseEdge
           }
           this.graphService.edges.push(newEdge);
+          // TODO: fix edge adding
+          // this.achievementsService.addProgressForCountLikeAchievements(ACHIEVEMENT_CATEGORY.EDGE_CREATOR)
 
           this.graphService.graphInstances[
             this.graphInstanceIndex
@@ -224,15 +230,15 @@ export class CanvasService {
               edgeHitbox
             );
           });
-
-          console.log([clickedEdge])
-          console.log(clickedEdge)
           if (clickedEdge) {
             this.graphService.edges = this.graphService.edges.filter(edge => edge !== clickedEdge);
             this.graphService.graphInstances[this.graphInstanceIndex].edges =
               this.graphService.graphInstances[this.graphInstanceIndex].edges.filter(edge => edge !== clickedEdge);
-            this.drawGraph(false);
             this.utilsService.showSnackBar(`Edge[${clickedEdge.from.number} - ${clickedEdge.to.number}] deleted`);
+            this.achievementsService.addProgressForCountLikeAchievements(
+              ACHIEVEMENT_CATEGORY.EDGE_DELETION
+            )
+            this.drawGraph(false);
             return;
           }
         }
@@ -687,8 +693,6 @@ export class CanvasService {
   }
 
   onInstanceIndexChange(direction: 'right' | 'left'){
-    console.log(`[this.graphService.graphInstances]`)
-    console.log(this.graphService.graphInstances)
 
     if(direction === 'right' && this.graphInstanceIndex === this.graphService.graphInstances.length-1){
       return

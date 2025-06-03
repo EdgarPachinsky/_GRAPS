@@ -5,6 +5,8 @@ import {GraphService} from "../graph.service";
 import {CanvasService} from "../canvas.service";
 import {DirectionTypes} from "../../contants/graph.constants";
 import {FormControl, Validators} from "@angular/forms";
+import {ACHIEVEMENT_CATEGORY, ACHIEVEMENT_ID} from "../../models/achievements.model";
+import {AchievementsService} from "../achievements.service";
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +39,7 @@ export class DepthFirstSearchService {
   constructor(
     public graphService: GraphService,
     public canvasService: CanvasService,
+    public achievementsService: AchievementsService,
   ) {
 
   }
@@ -82,7 +85,6 @@ export class DepthFirstSearchService {
       this.pausedIterator = this.iteration; // Update paused iterator
 
       if(this.iteration === this.pathDetailsArray.length){
-        console.log(`Animation over!`)
         this.iteration = 0;
         this.pausedIterator = this.iteration;
         this.isPlaying = false;
@@ -156,6 +158,13 @@ export class DepthFirstSearchService {
   }
 
   DepthFirstSearch(){
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.THE_TRAVERSER, "DFS"
+    )
+    this.achievementsService.addProgressForRunAlgorithmTypeAchievements(
+      ACHIEVEMENT_ID.ALGOHOLIC, "DFS"
+    )
+
     this.dumpGlobals();
     this.startNode = this.graphService.getVertexFromNumber(
       parseInt(this.startPointControl.value?.toString() || '1')

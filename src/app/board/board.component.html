@@ -69,7 +69,7 @@
       <button
         (click)="graphService.openAchievements()"
         class="mat-ripple mat-warn ml-10" mat-raised-button mat-button>
-        Achievements @if(achievementsService.unlockedAchievementCount){[ {{ achievementsService.unlockedAchievementCount }} Unlocked ]}
+        Achievements @if(achievementsService.unlockedAchievementCount){[ {{ achievementsService.unlockedAchievementCount }} / {{ achievementsService.allAchievementCount }} ]}
         <span class="material-icons mr-5">
           emoji_events
         </span>

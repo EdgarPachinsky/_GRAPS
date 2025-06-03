@@ -15,14 +15,21 @@
           <button
             [matTooltip]="'Progress'"
             class="mat-ripple mat-warn" mat-raised-button mat-button>
-            {{ achievementsService.checkNumericAchievementProgress(achievement.id) || 0 }} %
+
+            @if(achievement.criteria.type === 'count') {
+              {{ achievementsService.checkNumericAchievementProgress(achievement.id) || 0 }} %
+            }
+            @if(achievement.criteria.type === 'runAlgorithm') {
+              {{ achievementsService.checkRunAlgorithmAchievementProgress(achievement.id) || 0 }} %
+            }
+
             <span class="material-icons mr-5">
               trending_up
             </span>
           </button>
 
           <button
-            [matTooltip]="achievementsService.checkIfLockedOrUnlocked(achievement.id) !== 'locked'?'Unlocked':'Locked'"
+            [matTooltip]="achievementsService.checkIfLockedOrUnlocked(achievement.id) !== 'locked'?'Unlocked on '+achievementsService.getUnlockDateString(achievement.id):'Locked'"
             class="mat-ripple mat-warn ml-10" mat-raised-button mat-button>
             <span class="material-icons text-color-warning">
                 @if (achievementsService.checkIfLockedOrUnlocked(achievement.id) !== 'locked') {lock_open} @else {lock}
